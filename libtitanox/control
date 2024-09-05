@@ -1,8 +1,8 @@
-Package: com.rage.titan
+Package: com.rage.titanox
 Name: libtitanox
 Version: 1
 Architecture: iphoneos-arm
-Description: A hooking library, particularly for jailed environments!
+Description: A hooking framework, particularly for jailed environments!
 Maintainer: rage
 Author: rage
 Section: System
