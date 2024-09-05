@@ -86,15 +86,46 @@ intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName.dylib"];
 
 
 
-## Installation
+## Compiling From Source:~
 
-### CocoaPods:~
+### Theos:~
+[theos](https://theos.dev): A cross-platform build system for creating iOS, macOS, Linux, and Windows programs.
+* Install theos based on your device.
 
-Add the following to your `Podfile`:
+** Prequisites:~
+For linux: ``sudo apt install bash curl sudo``. **Can vary depending on distribution. This is for kali/ubuntu/debian or other debian based distros.**
 
-```ruby
-pod 'Titanox', :git => 'https://github.com/Ragekill3377/Titanox.git'
+For macOS: Install [brew](https://brew.sh) & xcode-command-line utilities, aswell as xcode itself.
+
+For Windows: Install WSL (Window's subsystem for Linux) and use any linux distribution. I recommend ``Ubuntu``.
+
+Once that is done, copy paste this command:
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
 ```
+It will install theos for you. wait until installation is completed.
+
+## Compiling:~
+* You can use **Theos** to build your own jailbroken or jailed/non-jailbroken IOS tweaks, frameworks, libraries etc.
+* For this, git clone this repo:
+```bash
+git clone https://github.com/Ragekill3377/Titanox.git
+```
+* cd into the directory:
+```bash
+cd Titanox
+```
+
+* Open ``Makefile`` in any editor.
+* remove `theos` variable set in ``Makefile`` as ``/home/rage/theos``, or just replace that path with the path to your own theos.
+* save the Makefile.
+* Run ``build`` to compile the titanox library:
+```bash
+./build
+```
+
+You will get a .deb file in your output directory i.e ``packages``. Also, it will move the *.dylib* to your $THEOS/lib directory as **libtitanox.dylib** (Unless you changed TWEAK_NAME in ``Makefile``).
+You can use this to link against your own code, or even you could merge Titanox's sources with your own.
 
 ### Using release builds:~
 * Navigate to releases
