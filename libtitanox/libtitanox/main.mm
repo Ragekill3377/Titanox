@@ -3,17 +3,17 @@
 #import <mach/mach.h>
 #import <mach/vm_map.h>
 #import <Foundation/Foundation.h>
-#import "../MemoryManager/CGuardMemory/CGPMemory.h" // Ensure the path is correct
+#import "../MemoryManager/CGuardMemory/CGPMemory.h" 
 #import "../fishhook/fishhook.h"
 
-// Declare a global instance of CGPMemoryEngine
+// decl
 static CGPMemoryEngine *memoryEngine = nullptr;
 
 @implementation TitanoxHook
 
 + (void)initializeMemoryEngine {
-    // Initialize the memory engine here. You might need to provide the appropriate mach port.
-    mach_port_t task = mach_task_self(); // Example, replace with appropriate task port if needed
+    // Initialize the memory engine here. 
+    mach_port_t task = mach_task_self();
     if (memoryEngine == nullptr) {
         memoryEngine = new CGPMemoryEngine(task);
     }
@@ -89,7 +89,7 @@ intptr_t GetVmAddrSlide(const char* dylibName) {
 
     *oldFunction = originalFunction;
 
-    // Initialize MemoryEngine if not done yet
+    // init mem-engine if not done yet.
     [self initializeMemoryEngine];
 
     // mem-write
@@ -145,7 +145,7 @@ intptr_t GetVmAddrSlide(const char* dylibName) {
         return;
     }
 
-    // Initialize MemoryEngine if not done yet
+    // Init again!!!
     [self initializeMemoryEngine];
 
     if (memoryEngine) {
@@ -153,7 +153,7 @@ intptr_t GetVmAddrSlide(const char* dylibName) {
     }
 }
 
-#pragma mark - Anti-Hook Detection
+#pragma mark - isHookedAlready?
 
 + (BOOL)isFunctionHooked:(const char *)symbol withOriginal:(void *)original inLibrary:(const char *)libName {
     Dl_info info;
@@ -168,7 +168,7 @@ intptr_t GetVmAddrSlide(const char* dylibName) {
     return YES; // Hooked
 }
 
-#pragma mark - Boolean Hooking
+#pragma mark - BoolChange
 
 + (void)hookBoolByName:(const char *)symbol inLibrary:(const char *)libName {
     NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
@@ -193,21 +193,21 @@ intptr_t GetVmAddrSlide(const char* dylibName) {
         return;
     }
     
-    // Toggle the boolean value
+    // True->False / False->True. for example let's say in libexample.dylib, a boolean var 'isvalid` is set to false. we can use this to set it to true by just the bool name and lib name.
     *boolAddress = !*boolAddress;
     NSLog(@"Successfully toggled boolean %s in library %s to %d", symbol, libName, *boolAddress);
     
     dlclose(handle);
 }
 
-#pragma mark - Base Address and VM Address Slide
+#pragma mark - B.A & VM.ADDR.S
 
 + (uint64_t)getBaseAddressOfLibrary:(const char *)dylibName {
-    return GetBaseAddress(dylibName); // Use the C function
+    return GetBaseAddress(dylibName); 
 }
 
 + (intptr_t)getVmAddrSlideOfLibrary:(const char *)dylibName {
-    return GetVmAddrSlide(dylibName); // Use the C function
+    return GetVmAddrSlide(dylibName); 
 }
 
 #pragma mark - Safety Checks
