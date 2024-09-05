@@ -76,8 +76,9 @@ Get the base address of a dynamic library:
 
 ```objc
 uint64_t baseAddress = [TitanoxHook getBaseAddressOfLibrary:"libName.dylib"];
-Get the VM address slide of a dynamic library:
 ```
+
+Get the VM address slide of a dynamic library:
 
 ```objc
 intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName.dylib"];
