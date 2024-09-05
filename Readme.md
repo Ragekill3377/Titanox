@@ -8,7 +8,7 @@
 - **Method Swizzling**: Replace methods in Objective-C classes.
 - **Memory Patching**: Modify memory contents safely.
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
-- **Is Hooked**: Check if a function is already hooked.
+- **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
 - **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
 
 ## APIs:~
