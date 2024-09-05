@@ -3,10 +3,23 @@
 #import <dlfcn.h>
 #include <mach/mach.h>
 #include <mach/vm_map.h>
-#import "../MemoryManager/CGuardMemory/CGPMemory.h" // Ensure the path is correct
+#import "../MemoryManager/CGuardMemory/CGPMemory.h"
 #import "../fishhook/fishhook.h"
 
 @interface TitanoxHook : NSObject
+
+
+ /*
+Function Hooking
+Method Swizzling
+Memory Patching
+Bool state change
+Already Hooked?
+BaseAddress & VM.Addr.Slide get
+
+** INIT MEMORY ENGINE FOR MEMORY RELATED FUNCTIONS **
+
+*/
 
 + (void)initializeMemoryEngine;
 + (void)hookStaticFunction:(const char *)symbol withReplacement:(void *)replacement outOldFunction:(void **)oldFunction;
