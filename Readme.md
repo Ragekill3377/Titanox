@@ -92,8 +92,10 @@ intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName.dylib"];
 [theos](https://theos.dev): A cross-platform build system for creating iOS, macOS, Linux, and Windows programs.
 * Install theos based on your device.
 
-** Prequisites:~
-For linux: ``sudo apt install bash curl sudo``. **Can vary depending on distribution. This is for kali/ubuntu/debian or other debian based distros.**
+**Prequisites:~**
+
+For linux: ``sudo apt install bash curl sudo``. 
+***Can vary depending on distribution. This is for kali/ubuntu/debian or other debian based distros.***
 
 For macOS: Install [brew](https://brew.sh) & xcode-command-line utilities, aswell as xcode itself.
 
@@ -104,6 +106,8 @@ Once that is done, copy paste this command:
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
 ```
 It will install theos for you. wait until installation is completed.
+
+**For more detailed/well-explained steps, please head over to https://theos.dev/docs for installing theos on your platform**
 
 ## Compiling:~
 * You can use **Theos** to build your own jailbroken or jailed/non-jailbroken IOS tweaks, frameworks, libraries etc.
