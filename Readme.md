@@ -1,6 +1,6 @@
 # Titanox
 
-`Titanox` is a hooking framework for dynamic libraries on iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management. This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
+`Titanox` is a hooking framework for dynamic libraries on iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
 ## Features
 
@@ -14,7 +14,10 @@
 ## APIs:~
 
 - **fishhook**: A library for symbol rebinding used by @facebook. [fishhook](https://github.com/facebook/fishhook.git)
+
 - **CGuardMemory**: A memory management library by @OPSphystech420. [CGuardProbe/CGuardMemory](https://github.com/OPSphystech420/CGuardProbe.git)
+
+- **libhooker**: A hooking framework for jailbroken devices, which was reimplemented in ``Titanox`` for non-jailbroken usage. by @coolstar. [libhooker OSS](https://github.com/coolstar/libhooker.git)
 
 ### Documentation:~
 # Usage:~
@@ -26,8 +29,22 @@ Before using any functions that require *memory operations*, initialize the **me
 [TitanoxHook initializeMemoryEngine];
 ```
 
-**Function Hooking**
-Hook a function by symbol(Will hook in main task process):
+**LHHookFunction for jailed IOS**
+Hook a function via trampoline hook, using the reimplemented libhooker API.
+* This patches the instructions in the binary at runtime, and changes the branch instructions to your own hooks.
+```objc
+LHHookRef hookRef;
+[TitanoxHook LHHookFunction:targetFunction hookFunction:yourhook inLibrary:"libexample.dylib" outHookRef:&hookRef];
+
+if (hookRef.trampoline) {
+NSLog(@"Success.");
+} else {
+NSLog(@"Failed.");
+}
+```
+
+**Function Hooking by fishhook (static)**
+Hook a function by symbol using fishhook (Will hook in main task process):
 
 ```objc
 [TitanoxHook hookStaticFunction:"symbolName" withReplacement:newFunction outOldFunction:&oldFunction];
@@ -134,16 +151,21 @@ You can use this to link against your own code, or even you could merge Titanox'
 ### Using release builds:~
 * Navigate to releases
 * Download the latest ``libtitanox.dylib``.
-* Link against ``libtitanox`` and include the headers.
+* Link against ``libtitanox`` and include the header.
 
+**In a Theos Makefile:**
+```make
+YOURTWEAKNAME_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # TODO: Change 'YOURTWEAKNAME' to your actual tweak name.
+```
+
+This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
 # **Disclaimer: This is made solely for **NON-JAILBROKEN DEVICES**
             # This framework cannot R/W directly to segments or modify protected segments, unless there is a jailbreak or JIT.
-            # But, this was made for non-jailbroken devices and it's intended use is within an application's sandbox. So runtime dissasembly, patching assembly instructions etc. is **NOT** feasible.
+            # But, this was made for non-jailbroken devices and it's intended use is within an application's sandbox. So those capabilities will not be added.
 
 # TODO:
-     * Add modifed substrate and libhooker APIs.
-     * Incoporate ellekit's C & Objctive-C hooks.
+     * Incorporate ellekit's hooking mechanisms and improve memory manager..
 
 ### License:
 You are free to use this code. I am not responsible for any illegal or malicious acts caused by the use of this code.
