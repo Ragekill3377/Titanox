@@ -17,7 +17,7 @@ static void* generate_trampoline(void* target_function, size_t instructions_to_s
     void* trampoline = malloc(instructions_to_save + 16); // Original + jump back
     if (!trampoline) return nullptr;
 
-    // Copy the original instructions to the trampoline
+    // copy original instructions to the trampoline
     memcpy(trampoline, target_function, instructions_to_save);
 
     return trampoline;
@@ -39,7 +39,7 @@ bool LHHookFunction(void* target_function, void* hook_function, LHHookRef* out_h
 
     make_memory_writable(target_function, instructions_to_overwrite);
 
-    // Use inline assembly for branch instruction to hook function
+    // INLINE ARM64 ASM
     uint64_t hook_address = (uint64_t)hook_function;
 
     __asm__ __volatile__ (
@@ -50,7 +50,7 @@ bool LHHookFunction(void* target_function, void* hook_function, LHHookRef* out_h
         : "x20"                // Clobbered register: x20
     );
 
-    // Save reference
+    // Save
     out_hook_ref->original_function = target_function;
     out_hook_ref->hook_function = hook_function;
 
@@ -64,7 +64,7 @@ bool LHHookFunction(void* target_function, void* hook_function, LHHookRef* out_h
 
     make_memory_writable(target_function, instructions_to_overwrite);
 
-    // Inline assembly for x86_64 jump instruction to the hook function
+    // INLINE X86_64 ASM
     uint64_t hook_address = (uint64_t)hook_function;
 
     __asm__ __volatile__ (
@@ -75,7 +75,7 @@ bool LHHookFunction(void* target_function, void* hook_function, LHHookRef* out_h
         : "rax", "memory"
     );
 
-    // Save reference
+    // Save this aswell.
     out_hook_ref->original_function = target_function;
     out_hook_ref->hook_function = hook_function;
 
