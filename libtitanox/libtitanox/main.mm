@@ -39,6 +39,32 @@ intptr_t GetVmAddrSlide(const char* dylibName) {
     return 0;
 }
 
+#pragma mark - LHHookFunction for jailed IOS.
+
++ (void)LHHookFunction:(void*)target_function hookFunction:(void*)hook_function inLibrary:(const char*)libName outHookRef:(LHHookRef*)out_hook_ref {
+
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+    NSString *libPath = [bundlePath stringByAppendingPathComponent:[NSString stringWithUTF8String:libName]];
+
+    
+    NSLog(@"[LHHookFunction] Hooking into lib at: %@", libPath);
+
+    
+    void *handle = dlopen([libPath UTF8String], RTLD_NOW | RTLD_NOLOAD);
+    if (!handle) {
+        NSLog(@"[LHHookFunction] Failed to open lib: %s", dlerror());
+        return;
+    }
+
+    // HOOK
+    NSLog(@"[LHHookFunction] Hooking target function at %p with hook function at %p", target_function, hook_function);
+    LHHookFunction(target_function, hook_function, out_hook_ref);
+
+    
+    dlclose(handle);
+    NSLog(@"[LHHookFunction] Hook Successful.");
+}
+
 #pragma mark - Static Function Hooking
 
 + (void)hookStaticFunction:(const char *)symbol withReplacement:(void *)replacement outOldFunction:(void **)oldFunction {
