@@ -5,6 +5,7 @@
 #import <Foundation/Foundation.h>
 #import "../MemoryManager/CGuardMemory/CGPMemory.h" 
 #import "../fishhook/fishhook.h"
+#import "../LH_jailed/libhooker-jailed.h"
 
 // decl
 static CGPMemoryEngine *memoryEngine = nullptr;
