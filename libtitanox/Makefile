@@ -8,7 +8,7 @@ FOR_RELEASE = 1
 
 IGNORE_WARNINGS = 1
 
-THEOS = /home/rage/theos # TODO: CHANGE THEOS HOME PATH TO YOUW OWN
+THEOS = /home/rage/theos # TODO: CHANGE THEOS HOME PATH TO YOUR OWN
 
 include $(THEOS)/makefiles/common.mk
 
