@@ -17,9 +17,10 @@ LIBRARY_NAME = libtitanox
 # Srcs
 MEMORY_MANAGER_FILES := $(wildcard MemoryManager/CGuardMemory/*.cpp)
 FISHHOOK_FILES := $(wildcard fishhook/*.c)
+LIBHOOKER_FILES := $(wildcard LH_jailed/*.mm)
 MAIN_SRCS := $(wildcard libtitanox/*.mm)
 
-$(LIBRARY_NAME)_FILES = $(FISHHOOK_FILES) $(MEMORY_MANAGER_FILES) $(MAIN_SRCS)
+$(LIBRARY_NAME)_FILES = $(FISHHOOK_FILES) $(MEMORY_MANAGER_FILES) $(MAIN_SRCS) $(LIBHOOKER_FILES)
 $(LIBRARY_NAME)_CFLAGS = -fobjc-arc -Wall -Wno-deprecated-declarations -Wno-unused-variable -Wno-unused-value -Wno-unused-function
 $(LIBRARY_NAME)_CCFLAGS = -std=c++11 -fno-rtti -fno-exceptions -DNDEBUG -Wall -Wno-deprecated-declarations -Wno-unused-variable -Wno-unused-value -Wno-unused-function
 
