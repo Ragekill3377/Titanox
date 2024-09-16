@@ -50,10 +50,11 @@ Hook a function by symbol using fishhook (Will hook in main task process):
 [TitanoxHook hookStaticFunction:"symbolName" withReplacement:newFunction outOldFunction:&oldFunction];
 ```  
 
-**Hook a function in a specific library:(Will hook in target library/Binary specified in 'inLibrary'. Full name is required.**
+**Hook a function in a specific library:(Will hook in target library/Binary specified in 'inLibrary'. Full name is required.
+Can be the main executable or a loaded library in the application.**
 
 ```objc
-[TitanoxHook hookFunctionByName:"symbolName" inLibrary:"libName.dylib" withReplacement:newFunction outOldFunction:&oldFunction];
+[TitanoxHook hookFunctionByName:"symbolName" inLibrary:"libName" withReplacement:newFunction outOldFunction:&oldFunction];
 ```
 
 **Method Swizzling**
