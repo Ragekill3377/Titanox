@@ -28,6 +28,7 @@ Before using any functions that require *memory operations*, initialize the **me
 ```objc
 [TitanoxHook initializeMemoryEngine];
 ```
+P.S: you do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function.
 
 **LHHookFunction for jailed IOS**
 Hook a function via trampoline hook, using the reimplemented libhooker API.
