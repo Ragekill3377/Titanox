@@ -31,6 +31,8 @@ Before using any functions that require *memory operations*, initialize the **me
 P.S: you do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function. However if you want to make your own usages globally, then you should.
 
 **LHHookFunction for jailed IOS**
+**Inline Function hooking**
+
 Hook a function via trampoline hook, using the reimplemented libhooker API.
 * This patches the instructions in the binary at runtime, and changes the branch instructions to your own hooks.
 ```objc
