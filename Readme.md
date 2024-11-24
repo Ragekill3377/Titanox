@@ -83,24 +83,24 @@ Patch memory at a specific address:
 ```
 
 **Boolean Hooking**
-Toggle a boolean value in a dynamic library:
+Toggle a boolean value in a dynamic library (add .dylib ext) / executable:
 
 ```objc
 
-[TitanoxHook hookBoolByName:"booleanSymbol" inLibrary:"libName.dylib"];
+[TitanoxHook hookBoolByName:"booleanSymbol" inLibrary:"libName"];
 ```
 
 **Base Address & VM Address Slide**
-Get the base address of a dynamic library:
+Get the base address of a dynamic library (add .dylib ext) / executable:
 
 ```objc
-uint64_t baseAddress = [TitanoxHook getBaseAddressOfLibrary:"libName.dylib"];
+uint64_t baseAddress = [TitanoxHook getBaseAddressOfLibrary:"libName"];
 ```
 
-Get the VM address slide of a dynamic library:
+Get the VM address slide of a dynamic library (add .dylib ext) / executable:
 
 ```objc
-intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName.dylib"];
+intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName"];
 ```
 
 
@@ -117,6 +117,7 @@ For linux: ``sudo apt install bash curl sudo``.
 ***Can vary depending on distribution. This is for kali/ubuntu/debian or other debian based distros.***
 
 For macOS: Install [brew](https://brew.sh) & xcode-command-line utilities, aswell as xcode itself.
+P.S: You do not need to code in xcode itself, but the installation for it is mandatory.
 
 For Windows: Install WSL (Window's subsystem for Linux) and use any linux distribution. I recommend ``Ubuntu``.
 
@@ -126,7 +127,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/i
 ```
 It will install theos for you. wait until installation is completed.
 
-**For more detailed/well-explained steps, please head over to https://theos.dev/docs for installing theos on your platform**
+**For more detailed/well-explained steps, please head over to [theos's official documentation](https://theos.dev/docs) for installing theos on your platform**
 
 ## Compiling:~
 * You can use **Theos** to build your own jailbroken or jailed/non-jailbroken IOS tweaks, frameworks, libraries etc.
@@ -157,17 +158,18 @@ You can use this to link against your own code, or even you could merge Titanox'
 
 **In a Theos Makefile:**
 ```make
-YOURTWEAKNAME_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # TODO: Change 'YOURTWEAKNAME' to your actual tweak name.
+$(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # TODO: Change 'YOURTWEAKNAME' to your actual tweak name.
 ```
 
 This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
 # **Disclaimer: This is made solely for **NON-JAILBROKEN DEVICES**
-            # This framework cannot R/W directly to segments or modify protected segments, unless there is a jailbreak or JIT.
+            # This framework cannot R/W directly to segments or modify protected segments, unless there is a jailbreak or JIT. For example, using MSHookFunction on stock IOS is practically impossible.
             # But, this was made for non-jailbroken devices and it's intended use is within an application's sandbox. So those capabilities will not be added.
 
 # TODO:
-     * Incorporate ellekit's hooking mechanisms and improve memory manager..
+     ~* Incorporate ellekit's hooking mechanisms and improve memory manager..~
+      * Improve inline hook and affirm that it works for stock IOS: Done.
 
 ### License:
-You are free to use this code. I am not responsible for any illegal or malicious acts caused by the use of this code.
+You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
