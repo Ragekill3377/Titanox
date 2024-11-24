@@ -1,0 +1,3 @@
+#!/bin/bash
+
+clear && rm -rf packages && rm -rf .theos && make clean && make package
