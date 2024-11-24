@@ -3,8 +3,8 @@
 `Titanox` is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
 ## Features
-
-- **Function Hooking**: Hook functions and rebind symbols.
+- **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
+- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
 - **Method Swizzling**: Replace methods in Objective-C classes.
 - **Memory Patching**: Modify memory contents safely.
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
