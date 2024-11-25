@@ -1,9 +1,10 @@
 # Titanox
 
 `Titanox` is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
-This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit)
+*experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit)
 
 ## Features
+**beta function**: brk hooking.
 - **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime. These are **software breakpoints**. They don't have any actual limit, but by default it's set to '6' (same as hardware breakpoints) in ``breakpoint.h``. you can adjust this. Will need to modify some code :p.
   
 - **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
