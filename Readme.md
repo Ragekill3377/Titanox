@@ -3,6 +3,7 @@
 `Titanox` is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
 ## Features
+- **Breakpoint hooks**: Apply upto maximum 6 hooks via software breakpoints at runtime.
 - **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
 - **Method Swizzling**: Replace methods in Objective-C classes.
@@ -29,6 +30,15 @@ Before using any functions that require *memory operations*, initialize the **me
 [TitanoxHook initializeMemoryEngine];
 ```
 P.S: you do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function. However if you want to make your own usages globally, then you should.
+
+**BRK Hook (Aarch64/arm64)**
+```objc
+void* targetFunction = (void*)dlsym(RTLD_DEFAULT, "_exit"); // example.
+void* replacementFunction = (void*)replacementFunction;
+void* originalFunction = NULL; // just an example, but please store orig  func pointer of target func pointer, and use that!
+
+[TitanoxHook addBreakpointAtAddress:targetFunction replacement:replacementFunction outOriginal:&originalFunction];
+```
 
 **LHHookFunction for jailed IOS**
 **Inline Function hooking**
