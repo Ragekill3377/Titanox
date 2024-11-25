@@ -4,7 +4,7 @@
 This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit)
 
 ## Features
-- **Breakpoint hooks**: Apply upto maximum 6 hooks via software breakpoints at runtime.
+- **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
 - **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
 - **Method Swizzling**: Replace methods in Objective-C classes.
