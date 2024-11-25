@@ -7,7 +7,7 @@
 #include <mach/thread_status.h>
 
 // constants.
-// max software breakpoints will always be 6. you cannot exceed this.
+// max hardware breakpoints will always be 6. you cannot exceed this.
 #define SOFTWARE_BP_OPCODE 0xD4200000  // ARM64 BRK instruction opcode
 #define MAX_BREAKPOINTS 6
 
