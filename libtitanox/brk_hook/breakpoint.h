@@ -8,6 +8,7 @@
 
 // constants.
 // max hardware breakpoints will always be 6. you cannot exceed this.
+// you can adjust the max brk to whatever you want.
 // but, these are software breakpoints and shouldn't have a limit. (yea im weird, and it looks weird. its due to my lack of understanding i guess... :p)
 #define SOFTWARE_BP_OPCODE 0xD4200000  // ARM64 BRK instruction opcode
 #define MAX_BREAKPOINTS 6
