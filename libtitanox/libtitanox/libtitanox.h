@@ -20,7 +20,7 @@
                      selector:(SEL)selector 
               withNewFunction:(IMP)newFunction
             oldFunctionPointer:(IMP *)oldFunctionPointer;
-+ (void)patchMemoryAtAddress:(void *)address withData:(const void *)data length:(size_t)length;
++ (void)patchMemoryAtAddress:(void *)address withData:(void *)data length:(size_t)length;
 + (BOOL)isFunctionHooked:(const char *)symbol withOriginal:(void *)original inLibrary:(const char *)libName;
 + (void)hookBoolByName:(const char *)symbol inLibrary:(const char *)libName;
 + (uint64_t)getBaseAddressOfLibrary:(const char *)libName;

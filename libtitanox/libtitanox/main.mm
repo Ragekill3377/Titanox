@@ -6,12 +6,9 @@
 #import "../MemoryManager/CGuardMemory/CGPMemory.h"
 #import "../fishhook/fishhook.h"
 #import "../LH_jailed/libhooker-jailed.h"
-#import "../brk_hook/breakpoint.h"
 
 
 static CGPMemoryEngine *memoryEngine = nullptr;
-
-
 
 @implementation TitanoxHook
 
@@ -23,46 +20,31 @@ static CGPMemoryEngine *memoryEngine = nullptr;
 
 #pragma mark - Base Address and VM Address Slide
 
-uint64_t GetBaseAddress(const char* libName) {
+uint64_t GetBaseAddress(const char* dylibName) {
     for (uint32_t i = 0; i < _dyld_image_count(); ++i) {
         const char* DyldName = _dyld_get_image_name(i);
-        if (DyldName && strstr(DyldName, libName)) {
+        if (DyldName && strstr(DyldName, dylibName)) {
             return (uint64_t)_dyld_get_image_header(i);
         }
     }
     return 0;
 }
 
-intptr_t GetVmAddrSlide(const char* libName) {
+intptr_t GetVmAddrSlide(const char* dylibName) {
     for (uint32_t i = 0; i < _dyld_image_count(); ++i) {
         const char* DyldName = _dyld_get_image_name(i);
-        if (DyldName && strstr(DyldName, libName)) {
+        if (DyldName && strstr(DyldName, dylibName)) {
             return _dyld_get_image_vmaddr_slide(i);
         }
     }
     return 0;
 }
 
-#pragma mark - Breakpoint hook
-
-+ (void)initBrk {
-
-    init_breakpoints();
-}
-
-+ (void)addBreakpointAtAddress:(void *)target replacement:(void *)replacement outOriginal:(void **)orig {
-    [self initBrk];
-    NSLog(@"Adding a breakpoint...");
-    add_breakpoint(target, replacement, orig);
-    NSLog(@"Added brk hook for %p", target);
-}
-
-
 #pragma mark - LHHookFunction for Jailed iOS
 
-+ (void)LHHookFunction:(void*)target_function 
-         hookFunction:(void*)hook_function 
-             inLibrary:(const char*)libName 
++ (void)LHHookFunction:(void*)target_function
+         hookFunction:(void*)hook_function
+             inLibrary:(const char*)libName
            outHookRef:(LHHookRef*)out_hook_ref {
 
     NSString *libNameString = [NSString stringWithUTF8String:libName];
@@ -100,9 +82,9 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - Static Function Hooking
 
-+ (void)hookStaticFunction:(const char *)symbol 
-         withReplacement:(void *)replacement 
-          inLibrary:(const char *)libName 
++ (void)hookStaticFunction:(const char *)symbol
+         withReplacement:(void *)replacement
+          inLibrary:(const char *)libName
         outOldFunction:(void **)oldFunction {
 
     NSString *libNameString = [NSString stringWithUTF8String:libName];
@@ -137,9 +119,9 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - Inline Hooking
 
-+ (void)hookFunctionByName:(const char *)symbol 
-                inLibrary:(const char *)libName 
-          withReplacement:(void *)replacement 
++ (void)hookFunctionByName:(const char *)symbol
+                inLibrary:(const char *)libName
+          withReplacement:(void *)replacement
            outOldFunction:(void **)oldFunction {
 
     NSString *libNameString = [NSString stringWithUTF8String:libName];
@@ -170,7 +152,7 @@ intptr_t GetVmAddrSlide(const char* libName) {
     [self initializeMemoryEngine];
 
     if (memoryEngine) {
-        memoryEngine->CGPWriteMemory((long)originalFunction, &replacement, sizeof(replacement));
+        memoryEngine->WriteMemory(originalFunction, &replacement, sizeof(replacement));
     }
 
     dlclose(handle);
@@ -179,8 +161,8 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - Method Swizzling
 
-+ (void)swizzleMethod:(SEL)originalSelector 
-          withMethod:(SEL)swizzledSelector 
++ (void)swizzleMethod:(SEL)originalSelector
+          withMethod:(SEL)swizzledSelector
             inClass:(Class)targetClass {
 
     Method originalMethod = class_getInstanceMethod(targetClass, originalSelector);
@@ -203,9 +185,9 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - Method Overriding
 
-+ (void)overrideMethodInClass:(Class)targetClass 
-                     selector:(SEL)selector 
-              withNewFunction:(IMP)newFunction 
++ (void)overrideMethodInClass:(Class)targetClass
+                     selector:(SEL)selector
+              withNewFunction:(IMP)newFunction
             oldFunctionPointer:(IMP *)oldFunctionPointer {
 
     Method method = class_getInstanceMethod(targetClass, selector);
@@ -219,9 +201,9 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - Memory Patching
 
-+ (void)patchMemoryAtAddress:(void *)address 
-                   withData:(const void *)data 
-                     length:(size_t)length {
++ (void)patchMemoryAtAddress:(void *)address
+                   withData:(void *)data
+                     length:(int)length {
 
     if (![self isSafeToPatchMemoryAtAddress:address length:length]) {
         NSLog(@"Memory patching aborted: unsafe memory region.");
@@ -231,14 +213,14 @@ intptr_t GetVmAddrSlide(const char* libName) {
     [self initializeMemoryEngine];
 
     if (memoryEngine) {
-        memoryEngine->CGPWriteMemory((long)address, (void *)data, (int)length);
+        memoryEngine->WriteMemory(address, data, length);
     }
 }
 
 #pragma mark - Anti-Hook Detection
 
-+ (BOOL)isFunctionHooked:(const char *)symbol 
-           withOriginal:(void *)original 
++ (BOOL)isFunctionHooked:(const char *)symbol
+           withOriginal:(void *)original
              inLibrary:(const char *)libName {
 
     Dl_info info;
@@ -255,7 +237,7 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - Bool Hooking
 
-+ (void)hookBoolByName:(const char *)symbol 
++ (void)hookBoolByName:(const char *)symbol
              inLibrary:(const char *)libName {
 
     NSString *libNameString = [NSString stringWithUTF8String:libName];
@@ -288,7 +270,7 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - Safety Checks
 
-+ (BOOL)isSafeToPatchMemoryAtAddress:(void *)address 
++ (BOOL)isSafeToPatchMemoryAtAddress:(void *)address
                               length:(size_t)length {
 
     if (!address || length == 0) {
@@ -312,12 +294,12 @@ intptr_t GetVmAddrSlide(const char* libName) {
 
 #pragma mark - B.A & VM.ADDR.SLIDE
 
-+ (uint64_t)getBaseAddressOfLibrary:(const char *)libName {
-    return GetBaseAddress(libName); 
++ (uint64_t)getBaseAddressOfLibrary:(const char *)dylibName {
+    return GetBaseAddress(dylibName);
 }
 
-+ (intptr_t)getVmAddrSlideOfLibrary:(const char *)libName {
-    return GetVmAddrSlide(libName);
++ (intptr_t)getVmAddrSlideOfLibrary:(const char *)dylibName {
+    return GetVmAddrSlide(dylibName);
 }
 
 @end
