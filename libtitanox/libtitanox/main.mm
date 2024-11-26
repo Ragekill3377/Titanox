@@ -6,6 +6,7 @@
 #import "../MemoryManager/CGuardMemory/CGPMemory.h"
 #import "../fishhook/fishhook.h"
 #import "../LH_jailed/libhooker-jailed.h"
+#import "../brk_hook/breakpoint.h"
 
 
 static CGPMemoryEngine *memoryEngine = nullptr;
@@ -38,6 +39,20 @@ intptr_t GetVmAddrSlide(const char* dylibName) {
         }
     }
     return 0;
+}
+
+#pragma mark - Breakpoint Hook
+
++ (void)initBrk {
+
+    init_breakpoints();
+}
+
++ (void)addBreakpointAtAddress:(void *)target replacement:(void *)replacement outOriginal:(void **)orig {
+    [self initBrk];
+    NSLog(@"Adding a breakpoint...");
+    add_breakpoint(target, replacement, orig);
+    NSLog(@"Added brk hook for %p", target);
 }
 
 #pragma mark - LHHookFunction for Jailed iOS
