@@ -1,7 +1,7 @@
 # Titanox
 
-`Titanox` is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
-*experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit)
+**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
+*experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
 **beta function**: brk hooking.
@@ -102,7 +102,7 @@ Toggle a boolean value in a dynamic library (add .dylib ext) / executable:
 
 ```objc
 
-[TitanoxHook hookBoolByName:"booleanSymbol" inLibrary:"libName"];
+[TitanoxHook hookBoolByName:"bool-symbol" inLibrary:"libName"];
 ```
 
 **Base Address & VM Address Slide**
