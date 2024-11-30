@@ -1,6 +1,6 @@
 # Titanox
 
-**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
+**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also has another known memory framework called ``JRMemory``, which is similar to CGuardMemory. It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 *experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
@@ -11,6 +11,9 @@
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
 - **Method Swizzling**: Replace methods in Objective-C classes.
 - **Memory Patching**: Modify memory contents safely.
+-> Read (Uses direct mach vm, since I had some *issues*)
+-> Write (CGP)
+-> Write (JRM)
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
 - **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
@@ -21,6 +24,8 @@
 
 - **CGuardMemory**: A memory management library by @OPSphystech420. [CGuardProbe/CGuardMemory](https://github.com/OPSphystech420/CGuardProbe.git)
 
+- **JRMemory**: A simple memory management library @ [JRMemory.framework](https://github.com/x2niosvn/iOS-Simple-IGG-Mod-Menu/tree/main/X2N/JRMemory.framework)
+
 - **libhooker**: A hooking framework for jailbroken devices, which was reimplemented in ``Titanox`` for non-jailbroken usage. by @coolstar. [libhooker OSS](https://github.com/coolstar/libhooker.git)
 
 ### Documentation:~
@@ -30,7 +35,8 @@
 Before using any functions that require *memory operations*, initialize the **memory-engine**:
 
 ```objc
-[TitanoxHook initializeMemoryEngine];
+[TitanoxHook initCGPMemEngine]; // cgp memory engine
+[TitanoxHook initJRMemEngine];  // JRMemory engine
 ```
 P.S: you do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function. However if you want to make your own usages globally, then you should.
 
@@ -50,7 +56,7 @@ Hook a function via trampoline hook, using the reimplemented libhooker API.
 * This patches the instructions in the binary at runtime, and changes the branch instructions to your own hooks.
 ```objc
 LHHookRef hookRef;
-[TitanoxHook LHHookFunction:targetFunction hookFunction:yourhook inLibrary:"libexample.dylib" outHookRef:&hookRef];
+[TitanoxHook LHHookFunction:targetFunction hookFunction:yourhook inLibrary:"libexample" outHookRef:&hookRef];
 
 if (hookRef.trampoline) {
 NSLog(@"Success.");
@@ -91,10 +97,51 @@ Override a method in a class with a new implementation:
 ```
 
 **Memory Patching**
-Patch memory at a specific address:
-
+R/W memory at a specific address:
+**Read**
 ```objc
-[TitanoxHook patchMemoryAtAddress:address withData:data length:length];
+
+long baseAddr = [TitanoxHook getBaseAddressOfLibrary:"ShooterGame"];
+
+
+unsigned long long targetAddr = baseAddr + 0x740;
+
+// read 4 bytes a s an example
+size_t dataSize = sizeof(int);
+void *data = [TitanoxHook ReadMemAtAddr:targetAddr size:dataSize];
+
+if (data != NULL) {
+    int *intValue = (int *)data;
+    NSLog(@"Read value: %d from address: 0x%llx", *intValue, targetAddr);
+    free(data);
+} else {
+    NSLog(@"Failed to read memory from address: 0x%llx", targetAddr);
+}
+
+```
+**Write (JRM)**:
+```objc
+unsigned long long targetAddr = baseAddr + 0x740;
+uint8_t dataToWrite = 0x9A;
+BOOL success = [TitanoxHook JRwriteMemory:targetAddr withData:&dataToWrite length:sizeof(dataToWrite)];
+
+if (success) {
+    NSLog(@"Successfully wrote data to address: 0x%llx", targetAddr);
+} else {
+    NSLog(@"Failed to write data to address: 0x%llx", targetAddr);
+}
+```
+
+**Write (CGP)**:
+```objc
+void *targetAddr = (void *)(baseAddr + 0x740); // cast to void* since it expects a void ptr
+
+
+uint8_t dataToPatch = 0x9A;
+
+[TitanoxHook CGPpatchMemoryAtAddress:targetAddr withData:&dataToPatch length:sizeof(dataToPatch)];
+
+NSLog(@"Memory written to address: %p", targetAddr);
 ```
 
 **Boolean Hooking**
@@ -185,6 +232,7 @@ This will link *libtitanox.dylib*. From there, you can inject your own library o
 # TODO:
      ~* Incorporate ellekit's hooking mechanisms and improve memory manager..~
       * Improve inline hook and affirm that it works for stock IOS: Done.
+      * Add hardware breakpoint functionality: Pending *
 
 ### License:
 You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
