@@ -77,6 +77,7 @@ bool LHHookFunction(void* target_function, void* hook_function, LHHookRef* out_h
     
     
     if (!THPatchMem::PatchMemory(target_function, hook_instr, sizeof(hook_instr))) {
+        NSLog(@"Could not patch mem at addr:%p", target_function);
         return false;
     }
     
