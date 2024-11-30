@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <mach/mach.h>
+#include <memory>
 /*#include <mach/vm_statistics.h>
 #include <mach/mach_vm.h>*/
 #import <Foundation/Foundation.h>
