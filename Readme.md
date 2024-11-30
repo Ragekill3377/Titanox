@@ -1,4 +1,4 @@
-# Titanox
+# **Titanox**
 
 **`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management.It also has another known memory framework called ``JRMemory``, which is similar to CGuardMemory. It also contains a reimplemented version of ``libhooker`` by coolstar (The creator of the electra jailbreak for IOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 *experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
@@ -12,8 +12,9 @@
 - **Method Swizzling**: Replace methods in Objective-C classes.
 - **Memory Patching**: Modify memory contents safely.
 -> Read (Uses direct mach vm, since I had some *issues*)
--> Write (CGP)
--> Write (JRM)
+-> Write (CGP) // diff mem manager
+-> Write (JRM) // diff mem framework
+-> Patch (Insipred from Dobby's CodePatch, made to work on stock IOS)
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
 - **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
@@ -142,6 +143,17 @@ uint8_t dataToPatch = 0x9A;
 [TitanoxHook CGPpatchMemoryAtAddress:targetAddr withData:&dataToPatch length:sizeof(dataToPatch)];
 
 NSLog(@"Memory written to address: %p", targetAddr);
+```
+
+**Patch Memory**:
+```objc
+    // ARM64 NOP instruction (4-byte)
+    uint32_t nop[] = {0x1F2003D5};  // ARM64 NOP instruction
+    void *addr = (void *)0x1000;    // mem addr
+    size_t len = sizeof(patch);       // size
+
+    // This will NOP the fun/data at specified address
+    [TitanoxHook patchMemoryAtAddress:addr withPatch:nop size:len];
 ```
 
 **Boolean Hooking**
