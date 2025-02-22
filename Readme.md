@@ -42,6 +42,7 @@ Before using any functions that require *memory operations*, initialize the **me
 P.S: you do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function. However if you want to make your own usages globally, then you should.
 
 **BRK Hook (Aarch64/arm64)**
+**BRK 1 (Old):**
 ```objc
 void* targetFunction = (void*)dlsym(RTLD_DEFAULT, "_exit"); // example.
 void* replacementFunction = (void*)replacementFunction;
@@ -49,6 +50,35 @@ void* originalFunction = NULL; // just an example, but please store orig  func p
 
 [TitanoxHook addBreakpointAtAddress:targetFunction replacement:replacementFunction outOriginal:&originalFunction];
 ```
+**BRK 2 (NEW + RECOMMENDED):**
+```objc
+static void (*original_exit)(int) = NULL;
+
+void hooked_exit(int status) {
+    NSLog(@"[HOOK] _exit called with status: %d", status);
+
+    if (original_exit) {
+        original_exit(status);
+    }
+}
+
+original_exit = (void (*)(int)) dlsym(RTLD_DEFAULT, "_exit");
+
+    if (!original_exit) {
+        return;
+    }
+
+    if ([Titanox addBreakpointAtAddressNew:(void *)original_exit withHook:(void *)hooked_exit]) {
+        NSLog(@"exit hooked");
+    } else {
+        NSLog(@"failed to hook exit");
+    }
+```
+**Difference between BRK 1 & 2?**
+-> 1 requires an orig back, that makes 3 parameters
+-> 2 doesn't need an orig, so 2 paramters.
+**BOTH have a limit to 6 in total (you cannot exceed the limit of 6 hooks combined.)**
+
 
 **LHHookFunction for jailed IOS**
 **Inline Function hooking**
@@ -228,6 +258,7 @@ You can use this to link against your own code, or even you could merge Titanox'
 ### Using release builds:~
 * Navigate to releases
 * Download the latest ``libtitanox.dylib``.
+* Put ``libtitanox.dylib`` in /home/{username}/theos/lib
 * Link against ``libtitanox`` and include the header.
 
 **In a Theos Makefile:**
@@ -237,9 +268,6 @@ $(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # T
 
 This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
-# **Disclaimer: This is made solely for **NON-JAILBROKEN DEVICES**
-            # This framework cannot R/W directly to segments or modify protected segments, unless there is a jailbreak or JIT. For example, using MSHookFunction on stock IOS is practically impossible.
-            # But, this was made for non-jailbroken devices and it's intended use is within an application's sandbox. So those capabilities will not be added.
 
 # TODO:
      ~* Incorporate ellekit's hooking mechanisms and improve memory manager..~
