@@ -68,7 +68,7 @@ original_exit = (void (*)(int)) dlsym(RTLD_DEFAULT, "_exit");
         return;
     }
 
-    if ([Titanox addBreakpointAtAddressNew:(void *)original_exit withHook:(void *)hooked_exit]) {
+    if ([TitanoxHook addBreakpointAtAddressNew:(void *)original_exit withHook:(void *)hooked_exit]) {
         NSLog(@"exit hooked");
     } else {
         NSLog(@"failed to hook exit");
