@@ -6,6 +6,8 @@
 ## Features
 **beta function**: brk hooking.
 - **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime. These are **software breakpoints**. They don't have any actual limit, but by default it's set to '6' (same as hardware breakpoints) in ``breakpoint.h``. you can adjust this. Will need to modify some code :p.
+- **2 DIFFERENT BRK HOOKS**
+-> You can use either one. the old one or the new one. both are ellekit-based.
   
 - **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
@@ -18,6 +20,8 @@
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
 - **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
+
+**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS ``TITANOX_LOGS.TXT``. NO NEED TO USE ``NSLog`` or ``Console`` app to view logs! You can take logging from ``utils/utils.mm``.**
 
 ## APIs:~
 
