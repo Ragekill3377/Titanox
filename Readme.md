@@ -5,9 +5,10 @@
 
 ## Features
 **beta function**: brk hooking.
-- **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime. These are **software breakpoints**. They don't have any actual limit, but by default it's set to '6' (same as hardware breakpoints) in ``breakpoint.h``. you can adjust this. Will need to modify some code :p.
+- **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
 - **2 DIFFERENT BRK HOOKS**
--> You can use either one. the old one or the new one. both are ellekit-based.
+-> You can use either one. the old one or the new one. both are ellekit-based.-> New one is reccomended, it supports ``unhooking`` aswell.
+-> The new one is much more stable AND supports a jailed environment.
   
 - **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
@@ -66,21 +67,38 @@ void hooked_exit(int status) {
     }
 }
 
-original_exit = (void (*)(int)) dlsym(RTLD_DEFAULT, "_exit");
+void hook_exit() {
+    original_exit = (void (*)(int)) dlsym(RTLD_DEFAULT, "_exit");
 
     if (!original_exit) {
+        NSLog(@"[ERROR] Failed to find _exit symbol");
         return;
     }
 
     if ([TitanoxHook addBreakpointAtAddressNew:(void *)original_exit withHook:(void *)hooked_exit]) {
-        NSLog(@"exit hooked");
+        NSLog(@"[HOOK] _exit hooked successfully");
     } else {
-        NSLog(@"failed to hook exit");
+        NSLog(@"[ERROR] Failed to hook _exit");
     }
+}
+
+void unhook_exit() {
+    if (!original_exit) {
+        NSLog(@"[ERROR] Cannot unhook _exit: original_exit is NULL");
+        return;
+    }
+
+    if ([TitanoxHook removeBreakpointAtAddress:(void *)original_exit]) {
+        NSLog(@"[HOOK] _exit unhooked successfully");
+    } else {
+        NSLog(@"[ERROR] Failed to unhook _exit");
+    }
+}
 ```
 **Difference between BRK 1 & 2?**
 -> 1 requires an orig back, that makes 3 parameters
 -> 2 doesn't need an orig, so 2 paramters.
+-> 1 can't remove hooks, 2 can.
 **BOTH have a limit to 6 in total (you cannot exceed the limit of 6 hooks combined.)**
 
 
