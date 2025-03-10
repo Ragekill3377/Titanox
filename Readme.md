@@ -82,6 +82,7 @@ void hook_exit() {
     }
 }
 
+// this is NEW. Now, you can Un-hook specific hooks!!!
 void unhook_exit() {
     if (!original_exit) {
         NSLog(@"[ERROR] Cannot unhook _exit: original_exit is NULL");
