@@ -96,10 +96,15 @@ void unhook_exit() {
     }
 }
 ```
-**Difference between BRK 1 & 2?**
+**Difference between BRK 1 & 2? WHich one should I use?**
 -> 1 requires an orig back, that makes 3 parameters
+
 -> 2 doesn't need an orig, so 2 paramters.
+
 -> 1 can't remove hooks, 2 can.
+
+-> You need to setup a custom mach server AND exception handler for 1. 2 does this automatically.
+**Preference is [2].**
 **BOTH have a limit to 6 in total (you cannot exceed the limit of 6 hooks combined.)**
 
 
