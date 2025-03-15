@@ -82,7 +82,6 @@ void hook_exit() {
     }
 }
 
-// this is NEW. Now, you can Un-hook specific hooks!!!
 void unhook_exit() {
     if (!original_exit) {
         NSLog(@"[ERROR] Cannot unhook _exit: original_exit is NULL");
@@ -96,15 +95,12 @@ void unhook_exit() {
     }
 }
 ```
-**Difference between BRK 1 & 2? WHich one should I use?**
+**Difference between BRK 1 & 2?**
 -> 1 requires an orig back, that makes 3 parameters
-
 -> 2 doesn't need an orig, so 2 paramters.
-
 -> 1 can't remove hooks, 2 can.
+-> **NEW(2)**: You can use a debugger and use brk hooks without interference.
 
--> You need to setup a custom mach server AND exception handler for 1. 2 does this automatically.
-**Preference is [2].**
 **BOTH have a limit to 6 in total (you cannot exceed the limit of 6 hooks combined.)**
 
 
@@ -131,7 +127,7 @@ Hook a function by symbol using fishhook (Will hook in main task process):
 [TitanoxHook hookStaticFunction:"symbolName" withReplacement:newFunction outOldFunction:&oldFunction];
 ```  
 
-**Hook a function in a specific library:(Will hook in target library/Binary specified in 'inLibrary'. Full name is required.
+**Hook a function in a specific library**:(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
 Can be the main executable or a loaded library in the application.**
 
 ```objc
@@ -165,7 +161,7 @@ long baseAddr = [TitanoxHook getBaseAddressOfLibrary:"ShooterGame"];
 
 unsigned long long targetAddr = baseAddr + 0x740;
 
-// read 4 bytes a s an example
+// read 4 bytes as an example
 size_t dataSize = sizeof(int);
 void *data = [TitanoxHook ReadMemAtAddr:targetAddr size:dataSize];
 
