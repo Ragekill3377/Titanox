@@ -4,7 +4,7 @@
 #include <cstring>
 #include <sys/mman.h>
 #include <mach/error.h>
-
+/* inspired by dobby code patch */
 bool THPatchMem::memcpyAndValidate(void* address, const uint8_t* buffer, size_t bufferSize) {
     std::unique_ptr<uint8_t[]> bufferPtr(new uint8_t[bufferSize]);
     std::memcpy(bufferPtr.get(), buffer, bufferSize);
@@ -24,6 +24,7 @@ bool THPatchMem::writeWithVMWrite(void* address, const uint8_t* buffer, size_t b
     return true;
 }
 
+// may be misleading, this just means that it would change protections on target, write or not.
 bool THPatchMem::PatchMemoryWithPAC(void* address, uint8_t* buffer, size_t bufferSize) {
     if (!address || !buffer || bufferSize == 0) {
         return false;
@@ -39,7 +40,7 @@ bool THPatchMem::PatchMemoryWithPAC(void* address, uint8_t* buffer, size_t buffe
     mach_port_t selfTask = mach_task_self();
     kern_return_t kr;
 
-    kr = vm_protect(selfTask, pageStart, pageSize, false, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY);
+    kr = vm_protect(selfTask, pageStart, pageSize, false, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY); // need write and copy for memcpy
     if (kr != KERN_SUCCESS) {
         THLog(VM_PROTECT_ERROR_MSG, mach_error_string(kr));
         return false;
@@ -52,7 +53,7 @@ bool THPatchMem::PatchMemoryWithPAC(void* address, uint8_t* buffer, size_t buffe
         }
     }
 
-    kr = vm_protect(selfTask, pageStart, pageSize, false, VM_PROT_READ | VM_PROT_EXECUTE);
+    kr = vm_protect(selfTask, pageStart, pageSize, false, VM_PROT_READ | VM_PROT_EXECUTE); // back to r/x
     if (kr != KERN_SUCCESS) {
         THLog(@"[THPatchMem] vm_protect restore failed: %s", mach_error_string(kr));
         return false;
