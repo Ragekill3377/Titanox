@@ -1,7 +1,8 @@
 # **Titanox**
 
 **`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for advanced memory management. Aditionally, it has another known memory framework called ``JRMemory``, which is similar to CGuardMemory. It also contains a reimplemented version of ``libhooker`` by CoolStar (The creator of the Electra jailbreak for iOS11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** iOS devices with full functionality.
-*experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
+
+*Experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
 **beta function**: brk hooking.
