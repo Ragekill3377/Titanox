@@ -81,7 +81,7 @@ static void flush_icache_two(void* target_function, size_t size) {
     __builtin___clear_cache((char *)target_function, (char *)target_function + size);
 }
 
-
+// hause was here xoxo
 static void* generate_trampoline(void* target_function, size_t instructions_to_save) {
     void* trampoline = malloc(instructions_to_save + 16); // orig + jmp back
     if (!trampoline) return NULL;
