@@ -43,8 +43,7 @@
 
 - **libhooker**: A hooking framework for jailbroken devices, which was reimplemented in ``Titanox`` for non-jailbroken usage. by @coolstar. [libhooker OSS](https://github.com/coolstar/libhooker.git)
 
-### Documentation:~
-# Usage:~
+# Usage/Documentation:~
 
 **Initialize Memory Engine**
 Before using any functions that require *memory operations*, initialize the **memory-engine**:
