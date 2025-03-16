@@ -292,5 +292,6 @@ $(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # T
 
 This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
+**Will optimise memory managers or replace them entirely soon.**
 ### License:
 You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
