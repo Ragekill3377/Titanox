@@ -111,7 +111,7 @@ void unhook_exit() {
 -> 1 requires an orig back, that makes 3 parameters
 -> 2 doesn't need an orig, so 2 paramters.
 -> 1 can't remove hooks, 2 can.
--> **NEW(2)**: You can use a debugger and use brk hooks without interference.
+-> **NEW(2)**: You can use a debugger and use brk hooks without any interference.
 
 **BOTH have a limit to 6 in total (you cannot exceed the limit of 6 hooks combined.)**
 
@@ -119,8 +119,8 @@ void unhook_exit() {
 **LHHookFunction for jailed IOS**
 **Inline Function hooking**
 
-Hook a function via trampoline hook, using the reimplemented libhooker API.
-* This patches the instructions in the binary at runtime, and changes the branch instructions to your own hooks. It may require JIT.
+Hook a function via the trampoline hook, using the reimplemented libhooker API.
+* This patches instructions in the binary at runtime, and changes the branch instructions to your own hooks. It may require JIT.
 * If fails, fallback to a breakpoint hook!
 ```objc
 LHHookRef hookRef;
