@@ -9,7 +9,9 @@
 - **2 DIFFERENT BRK HOOKS**
 
 -> You can use either one. the old one or the new one. both are ellekit-based.
+
 -> New one is reccomended, it supports ``unhooking`` aswell.
+
 -> The new one is much more stable AND supports a jailed environment.
 **Just use new breakpoint hook.**
   
@@ -18,14 +20,18 @@
 - **Method Swizzling**: Replace methods in Objective-C classes.
 - **Memory Patching**: Modify memory contents safely.
 -> Read (Uses direct mach vm, since I had some *issues*)
+  
 -> Write (CGP) // diff mem manager
+
 -> Write (JRM) // diff mem framework
+
 -> Patch (Insipred from Dobby's CodePatch, made to work on stock IOS)
+
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
 - **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
 
-**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS ``TITANOX_LOGS.TXT``. NO NEED TO USE ``NSLog`` or ``Console`` app to view logs! You can take logging from ``utils/utils.mm``.**
+**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS ``TITANOX_LOGS.TXT``. NO NEED TO USE ``NSLog`` or ``Console`` app to view logs! You can take logging from ``utils/utils.mm``.** -> can be changed by modifying file name in ``utils/utils.mm``.
 
 ## APIs:~
 
@@ -112,6 +118,7 @@ void unhook_exit() {
 
 Hook a function via trampoline hook, using the reimplemented libhooker API.
 * This patches the instructions in the binary at runtime, and changes the branch instructions to your own hooks.
+* If fails, fallback to a breakpoint hook!
 ```objc
 LHHookRef hookRef;
 [TitanoxHook LHHookFunction:targetFunction hookFunction:yourhook inLibrary:"libexample" outHookRef:&hookRef];
@@ -125,6 +132,7 @@ NSLog(@"Failed.");
 
 **Function Hooking by fishhook (static)**
 Hook a function by symbol using fishhook (Will hook in main task process):
+* Function must be exported as a symbol. it cannot work without symbol.
 
 ```objc
 [TitanoxHook hookStaticFunction:"symbolName" withReplacement:newFunction outOldFunction:&oldFunction];
@@ -132,6 +140,7 @@ Hook a function by symbol using fishhook (Will hook in main task process):
 
 **Hook a function in a specific library**:(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
 Can be the main executable or a loaded library in the application.**
+* this is same as static function hook, but it automatically loads in the target executable.
 
 ```objc
 [TitanoxHook hookFunctionByName:"symbolName" inLibrary:"libName" withReplacement:newFunction outOldFunction:&oldFunction];
@@ -139,6 +148,7 @@ Can be the main executable or a loaded library in the application.**
 
 **Method Swizzling**
 Swizzle a method in a class:
+* exchange implementation
 
 ```objc
 [TitanoxHook swizzleMethod:@selector(originalMethod) withMethod:@selector(swizzledMethod) inClass:[TargetClass class]];
@@ -146,6 +156,7 @@ Swizzle a method in a class:
 
 **Method Overriding**
 Override a method in a class with a new implementation:
+* set new implementation
 
 ```objc
 [TitanoxHook overrideMethodInClass:[TargetClass class]
@@ -194,7 +205,6 @@ if (success) {
 ```objc
 void *targetAddr = (void *)(baseAddr + 0x740); // cast to void* since it expects a void ptr
 
-
 uint8_t dataToPatch = 0x9A;
 
 [TitanoxHook CGPpatchMemoryAtAddress:targetAddr withData:&dataToPatch length:sizeof(dataToPatch)];
@@ -209,13 +219,14 @@ NSLog(@"Memory written to address: %p", targetAddr);
     void *addr = (void *)0x1000;    // mem addr
     size_t len = sizeof(patch);       // size
 
-    // This will NOP the fun/data at specified address
+    // This will NOP the fun/data at specified address. this makes it target address do nothing/have nothing as an example.
     [TitanoxHook patchMemoryAtAddress:addr withPatch:nop size:len];
 ```
 
 **Boolean Hooking**
-Toggle a boolean value in a dynamic library (add .dylib ext) / executable:
-
+Toggle a bool value in a dynamic library (add .dylib ext) / executable:
+* this must also have symbol.
+  
 ```objc
 
 [TitanoxHook hookBoolByName:"bool-symbol" inLibrary:"libName"];
@@ -225,13 +236,13 @@ Toggle a boolean value in a dynamic library (add .dylib ext) / executable:
 Get the base address of a dynamic library (add .dylib ext) / executable:
 
 ```objc
-uint64_t baseAddress = [TitanoxHook getBaseAddressOfLibrary:"libName"];
+uint64_t baseAddress = [TitanoxHook getBaseAddressOfLibrary:"ShooterGame"]; // change name
 ```
 
 Get the VM address slide of a dynamic library (add .dylib ext) / executable:
 
 ```objc
-intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName"];
+intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"ShooterGame"]; // change name
 ```
 
 
@@ -285,16 +296,20 @@ You can use this to link against your own code, or even you could merge Titanox'
 ### Using release builds:~
 * Navigate to releases
 * Download the latest ``libtitanox.dylib``.
-* Put ``libtitanox.dylib`` in /home/{username}/theos/lib
+* Put ``libtitanox.dylib`` in **theos/lib**.
 * Link against ``libtitanox`` and include the header.
 
 **In a Theos Makefile:**
 ```make
-$(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # TODO: Change 'YOURTWEAKNAME' to your actual tweak name.
+$(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # TODO: Change tweak name if needed.
 ```
 
 This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
 **Will optimise memory managers or replace them entirely soon.**
+this includes:
+* CGuardMemory
+* JRMemory
+  
 ### License:
 You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
