@@ -7,8 +7,11 @@
 **beta function**: brk hooking.
 - **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
 - **2 DIFFERENT BRK HOOKS**
--> You can use either one. the old one or the new one. both are ellekit-based.-> New one is reccomended, it supports ``unhooking`` aswell.
+
+-> You can use either one. the old one or the new one. both are ellekit-based.
+-> New one is reccomended, it supports ``unhooking`` aswell.
 -> The new one is much more stable AND supports a jailed environment.
+**Just use new breakpoint hook.**
   
 - **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
