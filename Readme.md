@@ -5,19 +5,20 @@
 *Experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
-**beta function**: brk hooking.
+**Beta Function**: brk hooking.
 - **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
 - **2 DIFFERENT BRK HOOKS**
 
--> You can use either one. the old one or the new one. both are ellekit-based.
+-> You can use either the new or old, both are Ellekit-based.
 
--> New one is reccomended, it supports ``unhooking`` aswell.
+-> The new one is recommended, it supports ``unhooking`` as well.
 
--> The new one is much more stable AND supports a jailed environment.
+-> The new one has increases stability AND supports a jailed environment.
+
 **Just use new breakpoint hook.**
   
 - **Inline Function hooking (by offset)**: Hooks functions utilising symbols. Under the hood, it is instruction patching.
-- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
+- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!
 - **Method Swizzling**: Replace methods in Objective-C classes.
 - **Memory Patching**: Modify memory contents safely.
 -> Read (Uses direct mach vm, since I had some *issues*)
@@ -53,7 +54,7 @@ Before using any functions that require *memory operations*, initialize the **me
 [TitanoxHook initCGPMemEngine]; // cgp memory engine
 [TitanoxHook initJRMemEngine];  // JRMemory engine
 ```
-P.S: you do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function. However if you want to make your own usages globally, then you should.
+P.S: You do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function. However if you'd like to make your own usages globally, then you should.
 
 **BRK Hook (Aarch64/arm64)**
 **BRK 1 (Old):**
@@ -312,4 +313,4 @@ this includes:
 * JRMemory
   
 ### License:
-You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
+You are free to use this code and modify this code. However, We are not responsible for any damages, legal issues or malicious use resulting from this code.
