@@ -1,5 +1,5 @@
 // Modified by Euclid Jan G.
-
+// hooks big booty latinas to your fishing line
 #ifndef hook_h
 #define hook_h
 
