@@ -13,7 +13,7 @@
 
 -> The new one is recommended, it supports ``unhooking`` as well.
 
--> The new one has increases stability AND supports a jailed environment.
+-> The new one is stable AND supports a jailed environment.
 
 **Just use new breakpoint hook.**
   
