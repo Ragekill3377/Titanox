@@ -116,7 +116,7 @@ void unhook_exit() {
 **Inline Function hooking**
 
 Hook a function via trampoline hook, using the reimplemented libhooker API.
-* This patches the instructions in the binary at runtime, and changes the branch instructions to your own hooks.
+* This patches the instructions in the binary at runtime, and changes the branch instructions to your own hooks. It may require JIT.
 * If fails, fallback to a breakpoint hook!
 ```objc
 LHHookRef hookRef;
@@ -211,7 +211,7 @@ uint8_t dataToPatch = 0x9A;
 NSLog(@"Memory written to address: %p", targetAddr);
 ```
 
-**Patch Memory**:
+**Patch Memory**(it may require JIT):
 ```objc
     // ARM64 NOP instruction (4-byte)
     uint32_t nop[] = {0x1F2003D5};  // ARM64 NOP instruction
