@@ -139,7 +139,8 @@ Hook a function by symbol using fishhook (Will hook in main task process):
 [TitanoxHook hookStaticFunction:"symbolName" withReplacement:newFunction outOldFunction:&oldFunction];
 ```  
 
-**Hook a function in a specific library**:(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
+**Hook a function in a specific library**:
+(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. **It auto loads in the target if not loaded in!**
 Can be the main executable or a loaded library in the application.**
 * this is same as static function hook, but it automatically loads in the target executable.
 
