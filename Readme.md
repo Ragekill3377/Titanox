@@ -15,7 +15,7 @@
 -> The new one is much more stable AND supports a jailed environment.
 **Just use new breakpoint hook.**
   
-- **Inline Function hooking (by offset)**: Hooks functions via symbols. Under the hood, its instruction patching.
+- **Inline Function hooking (by offset)**: Hooks functions utilising symbols. Under the hood, it is instruction patching.
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
 - **Method Swizzling**: Replace methods in Objective-C classes.
 - **Memory Patching**: Modify memory contents safely.
