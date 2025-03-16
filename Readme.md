@@ -15,7 +15,7 @@
 
 -> The new one is recommended, it supports ``unhooking`` as well.
 
--> The new one is stable AND supports a jailed environment.
+-> The new one is stable and supports a jailed environment.
 
 **Use the new breakpoint hook.**
   
@@ -316,4 +316,4 @@ this includes:
 * JRMemory
   
 ### License:
-You are free to use this code and modify this code. However, We are not responsible for any damages, legal issues or malicious use resulting from this code.
+You are free to modify and utilise this code. However, We are not responsible for any damages, legal issues or malicious use resulting from this code.
