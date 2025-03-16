@@ -13,7 +13,7 @@
 
 -> You can use either the new or old, both are Ellekit-based.
 
--> The new one is recommended, it supports ``unhooking`` as well.
+-> The new one is recommended as it also supports ``unhooking``.
 
 -> The new one is stable and supports a jailed environment.
 
@@ -29,7 +29,7 @@
 
 -> Write (JRM) // diff mem framework
 
--> Patch (Insipred from Dobby's CodePatch, made to work on stock IOS)
+-> Patch (Insipred from Dobby's CodePatch, made to work on stock iOS)
 
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
