@@ -46,7 +46,7 @@
 - **JRMemory**: A simple memory management library @x2niosvn. [JRMemory.framework](https://github.com/x2niosvn/iOS-Simple-IGG-Mod-Menu/tree/main/X2N/JRMemory.framework)
 
 - **libhooker**: A hooking framework for jailbroken devices, which was reimplemented in ``Titanox`` for non-jailbroken usage. by @coolstar. [libhooker OSS](https://github.com/coolstar/libhooker.git)
-
+**LIBHOOKER JAILED IS REPLACED BY BRK HOOKS. WILL BE REMOVED ENTIRELY NEXT UPDATE**
 # Usage/Documentation:~
 
 **Initialize Memory Engine**
