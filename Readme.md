@@ -337,6 +337,7 @@ Don't expect everything to be working well. For bug reports, you must test multi
 
   
 ### License:
+This project is licensed under the **GNU GENERAL PUBLIC LICENSE Version 3**
 You are free to modify and utilise this code. However, We are not responsible for any damages, legal issues or malicious use resulting from this code.
 
 # Credits:
