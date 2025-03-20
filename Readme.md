@@ -314,6 +314,40 @@ This will link *libtitanox.dylib*. From there, you can inject your own library o
 this includes:
 * CGuardMemory
 * JRMemory
+
+# **DISCLAIMER**
+**Titanox is in no way a JAILBREAK or a TWEAK INJECTION LIBRARY.**  
+It is a **HOOKING framework for IN-APP.**
+
+This is used to, say, make modifications to processes **within a sandbox** however you'd like—giving you more freedom while still respecting iOS constraints.
+
+The **libhooker functionality DID NOT make jailbroken tweaks work without a jailbreak.**  
+This was **removed** because it did not function properly outside of a jailbreak.  
+
+**Please do not spread misinformation without consulting the developer or contributors first on what can be said about Titanox.**
+
+Titanox **can** be used for what was mentioned—**IF** you have a jailbreak! But you guys don't.  
+Maybe you want **mods for apps,** maybe you want to **patch things in apps,** maybe you want to **hook functions in apps.**
+That's what **Titanox is for.**
+
+Titanox is meant for **developers** to create tools like that for users.
+
+Titanox is **still being tested and developed.** Expect bugs. Report them.
+Don't expect everything to be working well. For bug reports, you must test multiple cases and see if the issue is a bug with Titanox or something you're doing wrong.
+
   
 ### License:
 You are free to modify and utilise this code. However, We are not responsible for any damages, legal issues or malicious use resulting from this code.
+
+# Credits:
+**Ragekill3377** -> Owner + Main Developer
+
+**Aethereux** -> developer
+
+**timi2506** -> developer
+
+**WhySooooFurious** -> developer
+
+**UnrealSrcZ** -> developer
+
+**Speedyfriend67** -> developer
