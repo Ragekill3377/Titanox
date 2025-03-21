@@ -29,7 +29,7 @@
 
 -> Write (JRM) // diff mem framework
 
--> Patch (Insipred from Dobby's CodePatch, made to work on stock iOS)
+-> Patch (Inspired from Dobby's CodePatch, made to work on stock iOS)
 
 - **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
