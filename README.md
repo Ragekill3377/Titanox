@@ -1,73 +1,41 @@
 # **Titanox**
 
-## Overview
+**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `MemX` for memory related tasks. This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
-**`Titanox`** is an advanced hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `CGuardMemory` for enhanced memory management. Additionally, it has another known memory framework called ``JRMemory``, which is similar to CGuardMemory. It also contains a reimplemented version of ``libhooker`` by CoolStar (The creator of the Electra jailbreak for iOS 11.). This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** iOS devices with ~full~ *some* functionality.
-
-*Experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
+*experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
-**Beta Function**: brk hooking.
+**beta function**: brk hooking.
 - **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
-- **2 DIFFERENT BRK HOOKS**
+-> Undetected*
 
--> You can use either the new or old, both are Ellekit-based.
+- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
 
--> The new one is recommended as it also supports ``unhooking``.
-
--> The new one is stable and supports a jailed environment.
-
-**Use the new breakpoint hook.**
-  
-- **Inline Function hooking (by offset)**: Hooks functions utilising symbols. Under the hood, it is instruction patching.
-- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!
 - **Method Swizzling**: Replace methods in Objective-C classes.
+
 - **Memory Patching**: Modify memory contents safely.
--> Read (Uses direct mach vm, since I had some *issues*)
-  
--> Write (CGP) // diff mem manager
+-> Read
+-> Write
+-> Patch (Insipred from Dobby's CodePatch, made to work on stock IOS)
 
--> Write (JRM) // diff mem framework
+- **Bool-Hooking**: Toggle bool values in memory, to the opposite of their original state. bool symbol must be exposed.
 
--> Patch (Inspired from Dobby's CodePatch, made to work on stock iOS)
-
-- **Bool-Hooking**: Toggle boolean values in memory, to the opposite of their original state.
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
+
 - **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
 
-**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS ``TITANOX_LOGS.TXT``. NO NEED TO USE ``NSLog`` or ``Console`` app to view logs! You can take logging from ``utils/utils.mm``.** -> can be changed by modifying file name in ``utils/utils.mm``.
+**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS ``TITANOX_LOGS.TXT``. NO NEED TO USE ``NSLog`` or ``Console`` app to view logs! You can take logging from ``utils/utils.mm``.**
 
 ## APIs:~
 
 - **fishhook**: A library for symbol rebinding used by @facebook. [fishhook](https://github.com/facebook/fishhook.git)
 
-- **CGuardMemory**: A memory management library by @OPSphystech420. [CGuardProbe/CGuardMemory](https://github.com/OPSphystech420/CGuardProbe.git)
+- **MemX**: A memory management library by @Aethereux. (Modified) [MemX-Jailed](https://github.com/Aethereux/MemX-Jailed.git)
 
-- **JRMemory**: A simple memory management library @x2niosvn. [JRMemory.framework](https://github.com/x2niosvn/iOS-Simple-IGG-Mod-Menu/tree/main/X2N/JRMemory.framework)
+### Documentation:~
+# Usage:~
 
-- **libhooker**: A hooking framework for jailbroken devices, which was reimplemented in ``Titanox`` for non-jailbroken usage. by @coolstar. [libhooker OSS](https://github.com/coolstar/libhooker.git)
-**LIBHOOKER JAILED IS REPLACED BY BRK HOOKS. WILL BE REMOVED ENTIRELY NEXT UPDATE**
-# Usage/Documentation:~
-
-**Initialize Memory Engine**
-Before using any functions that require *memory operations*, initialize the **memory-engine**:
-
-```objc
-[TitanoxHook initCGPMemEngine]; // cgp memory engine
-[TitanoxHook initJRMemEngine];  // JRMemory engine
-```
-P.S: You do NOT have to initialize the engine. it will automatically be initialized in the memory related functions such as the mem write function. However if you'd like to make your own usages globally, then you should.
-
-**BRK Hook (Aarch64/arm64)**
-**BRK 1 (Old):**
-```objc
-void* targetFunction = (void*)dlsym(RTLD_DEFAULT, "_exit"); // example.
-void* replacementFunction = (void*)replacementFunction;
-void* originalFunction = NULL; // just an example, but please store orig  func pointer of target func pointer, and use that!
-
-[TitanoxHook addBreakpointAtAddress:targetFunction replacement:replacementFunction outOriginal:&originalFunction];
-```
-**BRK 2 (NEW + RECOMMENDED):**
+**BRK Hook (Aarch64/arm64) FOR C/C++ FUNCTIONS BY ADDRESS**
 ```objc
 static void (*original_exit)(int) = NULL;
 
@@ -87,7 +55,7 @@ void hook_exit() {
         return;
     }
 
-    if ([TitanoxHook addBreakpointAtAddressNew:(void *)original_exit withHook:(void *)hooked_exit]) {
+    if ([TitanoxHook addBreakpointAtAddress:(void *)original_exit withHook:(void *)hooked_exit]) {
         NSLog(@"[HOOK] _exit hooked successfully");
     } else {
         NSLog(@"[ERROR] Failed to hook _exit");
@@ -107,130 +75,141 @@ void unhook_exit() {
     }
 }
 ```
-**Difference between BRK 1 & 2?**
--> 1 requires an orig back, that makes 3 parameters
--> 2 doesn't need an orig, so 2 paramters.
--> 1 can't remove hooks, 2 can.
--> **NEW(2)**: You can use a debugger and use brk hooks without any interference.
 
-**BOTH have a limit to 6 in total (you cannot exceed the limit of 6 hooks combined.)**
+**HAS a limit to 6 hooks. Unhooking frees those slots.**
 
-
-**LHHookFunction for jailed IOS**
-**Inline Function hooking**
-
-Hook a function via the trampoline hook, using the reimplemented libhooker API.
-* This patches instructions in the binary at runtime, and changes the branch instructions to your own hooks. It may require JIT.
-* If fails, fallback to a breakpoint hook!
-```objc
-LHHookRef hookRef;
-[TitanoxHook LHHookFunction:targetFunction hookFunction:yourhook inLibrary:"libexample" outHookRef:&hookRef];
-
-if (hookRef.trampoline) {
-NSLog(@"Success.");
-} else {
-NSLog(@"Failed.");
-}
-```
-
-**Function Hooking by fishhook (static)**
+**Function Hooking by fishhook (static) C/C++ Functions by SYMBOL**
 Hook a function by symbol using fishhook (Will hook in main task process):
-* Function must be exported as a symbol. it cannot work without symbol.
 
 ```objc
-[TitanoxHook hookStaticFunction:"symbolName" withReplacement:newFunction outOldFunction:&oldFunction];
+[TitanoxHook hookStaticFunction:"_funcsym" withReplacement:newFunction outOldFunction:&oldFunction];
 ```  
 
-**Hook a function in a specific library**:
-(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. **It auto loads in the target if not loaded in!**
+**Hook a function in a specific library**:(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
 Can be the main executable or a loaded library in the application.**
-* this is same as static function hook, but it automatically loads in the target executable.
 
 ```objc
-[TitanoxHook hookFunctionByName:"symbolName" inLibrary:"libName" withReplacement:newFunction outOldFunction:&oldFunction];
+[TitanoxHook hookFunctionByName:"_Zn5Get6Ten" inLibrary:"ShooterGame" withReplacement:newFunction outOldFunction:&oldFunction];
 ```
 
 **Method Swizzling**
-Swizzle a method in a class:
-* exchange implementation
+Swizzle a method in an objc class:
 
 ```objc
 [TitanoxHook swizzleMethod:@selector(originalMethod) withMethod:@selector(swizzledMethod) inClass:[TargetClass class]];
 ```
 
 **Method Overriding**
-Override a method in a class with a new implementation:
-* set new implementation
+Over-ride a method in an objc class with a new implementation:
 
 ```objc
 [TitanoxHook overrideMethodInClass:[TargetClass class]
-                          selector:@selector(methodToOverride)
+                          selector:@selector(targetMethod)
                    withNewFunction:newFunction
                  oldFunctionPointer:&oldFunction];
 ```
 
-**Memory Patching**
-R/W memory at a specific address:
-**Read**
+**Memory Modifications**
+R/W memory at specified addresses.
+
 ```objc
+mach_vm_address_t targetAddress = 0x102345678;
+uint8_t buffer[16] = {0};
+mach_vm_size_t size = sizeof(buffer);
 
-long baseAddr = [TitanoxHook getBaseAddressOfLibrary:"ShooterGame"];
-
-
-unsigned long long targetAddr = baseAddr + 0x740;
-
-// read 4 bytes as an example
-size_t dataSize = sizeof(int);
-void *data = [TitanoxHook ReadMemAtAddr:targetAddr size:dataSize];
-
-if (data != NULL) {
-    int *intValue = (int *)data;
-    NSLog(@"Read value: %d from address: 0x%llx", *intValue, targetAddr);
-    free(data);
+if ([TitanoxHook readMemoryAt:targetAddress buffer:buffer size:size]) {
+    NSLog(@"worked.");
 } else {
-    NSLog(@"Failed to read memory from address: 0x%llx", targetAddr);
+    NSLog(@"failed to read.");
 }
 
-```
-**Write (JRM)**:
-```objc
-unsigned long long targetAddr = baseAddr + 0x740;
-uint8_t dataToWrite = 0x9A;
-BOOL success = [TitanoxHook JRwriteMemory:targetAddr withData:&dataToWrite length:sizeof(dataToWrite)];
+// OR
 
-if (success) {
-    NSLog(@"Successfully wrote data to address: 0x%llx", targetAddr);
+if ([TitanoxHook MemXreadMemory:targetAddress buffer:buffer length:size]) {
+    NSLog(@"worked");
 } else {
-    NSLog(@"Failed to write data to address: 0x%llx", targetAddr);
+    NSLog(@"couldn't read.");
 }
 ```
 
-**Write (CGP)**:
+**Read String**
 ```objc
-void *targetAddr = (void *)(baseAddr + 0x740); // cast to void* since it expects a void ptr
 
-uint8_t dataToPatch = 0x9A;
+uintptr_t stringAddress = 0x102;
+size_t maxLen = 64;
 
-[TitanoxHook CGPpatchMemoryAtAddress:targetAddr withData:&dataToPatch length:sizeof(dataToPatch)];
+NSString *readString = [TitanoxHook MemXreadString:stringAddress maxLength:maxLen];
 
-NSLog(@"Memory written to address: %p", targetAddr);
+if (readString) {
+    NSLog(@"read string: %@", readString);
+} else {
+    NSLog(@"failed to read string.");
+}
+
 ```
 
-**Patch Memory**(it may require JIT):
+**Write**
+```objc
+mach_vm_address_t targetAddress = 0x1000000000;
+uint8_t data[] = {0xdead, 0xdead, 0xdead, 0xdead};
+mach_vm_size_t size = sizeof(data);
+
+if ([TitanoxHook writeMemoryAt:targetAddress data:data size:size]) {
+    NSLog(@"worked.");
+} else {
+    NSLog(@"failed.");
+}
+
+// OR
+
+NSNumber *value = @(12345);
+NSString *type = @"int";  // type of data ("int", "long", "uintptr_t", etc.)
+
+[TitanoxHook MemXwriteMemory:targetAddress value:value type:type];
+
+```
+
+**Is Address Valid?**
+```objc
+uintptr_t address = _dyld_get_image_header(10);
+
+if ([TitanoxHook MemXisValidPointer:address]) {
+    NSLog(@"ptr 0x%lx is valid.", address);
+} else {
+    NSLog(@"ptr 0x%lx is invalid.", address);
+}
+```
+
+**Change Memory protections with custom vm functions**
+```objc
+mach_vm_address_t targetAddress = 0x449ef78;  
+mach_vm_size_t size = 0x1000;  // this should be sizeof target addr but just an example here
+vm_prot_t newProtection = VM_PROT_READ | VM_PROT_WRITE;
+BOOL setMax = NO;  // depends on your usage case
+
+kern_return_t result = [TitanoxHook protectMemoryAt:targetAddress size:size setMax:setMax protection:newProtection];
+
+if (result == KERN_SUCCESS) {
+    NSLog(@"r/w");
+} else {
+    NSLog(@"orig prot, set failed.");
+}
+```
+
+**Patch Memory**:
 ```objc
     // ARM64 NOP instruction (4-byte)
     uint32_t nop[] = {0x1F2003D5};  // ARM64 NOP instruction
     void *addr = (void *)0x1000;    // mem addr
     size_t len = sizeof(patch);       // size
 
-    // This will NOP the fun/data at specified address. this makes it target address do nothing/have nothing as an example.
+    // This will NOP the fun/data at specified address
     [TitanoxHook patchMemoryAtAddress:addr withPatch:nop size:len];
 ```
 
 **Boolean Hooking**
-Toggle a bool value in a dynamic library (add .dylib ext) / executable:
-* this must also have symbol.
-  
+Toggle a boolean value in a dynamic library (add .dylib ext) / executable:
+
 ```objc
 
 [TitanoxHook hookBoolByName:"bool-symbol" inLibrary:"libName"];
@@ -240,13 +219,19 @@ Toggle a bool value in a dynamic library (add .dylib ext) / executable:
 Get the base address of a dynamic library (add .dylib ext) / executable:
 
 ```objc
-uint64_t baseAddress = [TitanoxHook getBaseAddressOfLibrary:"ShooterGame"]; // change name
+uint64_t baseAddress = [TitanoxHook getBaseAddressOfLibrary:"libName"];
+
+// OR
+
+NSString *img = @"libName";
+uintptr_t baseAddress = [TitanoxHook MemXgetImageBase:img];
+
 ```
 
 Get the VM address slide of a dynamic library (add .dylib ext) / executable:
 
 ```objc
-intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"ShooterGame"]; // change name
+intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName"];
 ```
 
 
@@ -300,20 +285,18 @@ You can use this to link against your own code, or even you could merge Titanox'
 ### Using release builds:~
 * Navigate to releases
 * Download the latest ``libtitanox.dylib``.
-* Put ``libtitanox.dylib`` in **theos/lib**.
+* Put ``libtitanox.dylib`` in /home/{username}/theos/lib
 * Link against ``libtitanox`` and include the header.
 
 **In a Theos Makefile:**
 ```make
-$(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # TODO: Change tweak name if needed.
+$(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # TODO: Change 'YOURTWEAKNAME' to your actual tweak name.
 ```
 
 This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
-**Will optimise memory managers or replace them entirely soon.**
-this includes:
-* CGuardMemory
-* JRMemory
+### License:
+You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
 
 # **DISCLAIMER**
 **Titanox is in no way a JAILBREAK or a TWEAK INJECTION LIBRARY.**  
@@ -334,11 +317,7 @@ Titanox is meant for **developers** to create tools like that for users.
 
 Titanox is **still being tested and developed.** Expect bugs. Report them.
 Don't expect everything to be working well. For bug reports, you must test multiple cases and see if the issue is a bug with Titanox or something you're doing wrong.
-
-  
-### License:
-This project is licensed under the **GNU GENERAL PUBLIC LICENSE Version 3**
-You are free to modify and utilise this code. However, We are not responsible for any damages, legal issues or malicious use resulting from this code.
+**Titanox feels...empty now. By this, I mean the features. I would love recommendations (feasible, ofcourse) for Titanox and community PRs!**
 
 # Credits:
 **Ragekill3377** -> Owner + Main Developer
