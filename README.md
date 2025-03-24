@@ -171,7 +171,7 @@ NSString *type = @"int";  // type of data ("int", "long", "uintptr_t", etc.)
 
 **Is Address Valid?**
 ```objc
-uintptr_t address = _dyld_get_image_header(10);
+uintptr_t address = 0x100;
 
 if ([TitanoxHook MemXisValidPointer:address]) {
     NSLog(@"ptr 0x%lx is valid.", address);
