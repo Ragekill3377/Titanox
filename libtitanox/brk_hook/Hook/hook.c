@@ -37,6 +37,10 @@ kern_return_t catch_mach_exception_raise_state_identity(
     abort(); // will call only if not hooked
 }
 
+// i guess you can change those
+// two abort calls to KERN_FAILURE
+// just in case. not needed though...
+
 mach_port_t server;
 static mach_port_t orig_handler_port = MACH_PORT_NULL; // for debuggers
 
