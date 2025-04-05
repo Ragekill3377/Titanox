@@ -4,6 +4,8 @@
 
 [Titanox Discord Server](https://discord.gg/VRJDUhBF)
 
+**Join for support!**
+
 *experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
