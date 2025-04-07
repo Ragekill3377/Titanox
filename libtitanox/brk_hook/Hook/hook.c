@@ -1,5 +1,5 @@
 // Modified by Euclid Jan G.
-
+/* Original owner: 34306 (Ha Nguyen) */
 #include "hook.h"
 #include "mach_excServer.h"
 #include <CoreFoundation/CoreFoundation.h>
