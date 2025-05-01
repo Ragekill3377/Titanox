@@ -46,9 +46,9 @@ static void (*original_exit)(int) = NULL;
 void hooked_exit(int status) {
     NSLog(@"[HOOK] _exit called with status: %d", status);
 
-    if (original_exit) {
-        original_exit(status);
-    }
+    // a bit difficult to call orig with brk hooks
+    // copy orig func data, strip PACs and use that (if it works)
+    return;
 }
 
 void hook_exit() {
