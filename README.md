@@ -6,7 +6,7 @@
 
 **Join for support!**
 
-*experimental*: This framework also uses ``breakpoint hooks``. Inspired from: [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
+*experimental*: This framework also uses ``breakpoint hooks``. Inspired by [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
 **beta function**: brk hooking.
