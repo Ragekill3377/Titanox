@@ -1,5 +1,5 @@
 // Modified by Euclid Jan G.
-
+// https://wsfteam.xyz/discord for femboys
 #ifndef hook_h
 #define hook_h
 
