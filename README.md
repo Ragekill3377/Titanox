@@ -1,4 +1,4 @@
-# **Titanox**
+# **Titanox: iOS**
 
 **`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `MemX` for memory related tasks. This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
@@ -44,6 +44,8 @@
 NO NEED TO USE `NSLog` or `Console` app to view logs!  
 You can take logging from `utils/utils.mm`.
 
+---
+
 ## APIs:~
 
 - **fishhook**: A library for symbol rebinding used by @facebook. [fishhook](https://github.com/facebook/fishhook.git)
@@ -52,7 +54,8 @@ You can take logging from `utils/utils.mm`.
 
 - **Capstone** : A light & portable dissasembler by @capstone-engine. [Capstone](https://github.com/capstone-engine/capstone)
 
-### Documentation:~
+---
+
 # Usage:~
 
 **OpCode Decoder by address (Dissasembler at runtime) (NEW)**:
@@ -330,7 +333,7 @@ Get the VM address slide of a dynamic library (add .dylib ext) / executable:
 intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName"];
 ```
 
-
+---
 
 ## Compiling From Source:~
 
@@ -378,6 +381,8 @@ cd Titanox
 You will get a .deb file in your output directory i.e ``packages``. Also, it will move the *.dylib* to your $THEOS/lib directory as **libtitanox.dylib** (Unless you changed TWEAK_NAME in ``Makefile``).
 You can use this to link against your own code, or even you could merge Titanox's sources with your own.
 
+---
+
 ### Using release builds:~
 * Navigate to releases
 * Download the latest ``libtitanox.dylib``.
@@ -391,8 +396,12 @@ $(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # T
 
 This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
+---
+
 ### License:
 You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
+
+---
 
 # **DISCLAIMER**
 **Titanox is in no way a JAILBREAK or a TWEAK INJECTION LIBRARY.**  
@@ -414,6 +423,8 @@ Titanox is meant for **developers** to create tools like that for users.
 Titanox is **still being tested and developed.** Expect bugs. Report them.
 Don't expect everything to be working well. For bug reports, you must test multiple cases and see if the issue is a bug with Titanox or something you're doing wrong.
 **Titanox feels...empty now. By this, I mean the features. I would love recommendations (feasible, ofcourse) for Titanox and community PRs!**
+
+---
 
 # Credits:
 **Ragekill3377** -> Owner + Main Developer
