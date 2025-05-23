@@ -13,7 +13,14 @@
 - **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
 -> Undetected*
 
+- **Opcode decoder**: Give it an address, it will use capstone and show dissasembly of that address and instruction.
+
 - **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
+
+- **Virtual Function hooking**: You can hook any pure C++ class virtual function with this. A wrapper for @Aethereux 's MemX.
+-> Unlimited
+-> Must be virtual
+-> By address
 
 - **Method Swizzling**: Replace methods in Objective-C classes.
 
@@ -36,8 +43,86 @@
 
 - **MemX**: A memory management library by @Aethereux. (Modified) [MemX-Jailed](https://github.com/Aethereux/MemX-Jailed.git)
 
+- **Capstone** : A light & portable dissasembler by @capstone-engine. [Capstone](https://github.com/capstone-engine/capstone)
+
 ### Documentation:~
 # Usage:~
+
+**OpCode Decoder by address (Dissasembler at runtime) (NEW)**:
+```objc
+void *target = baseAddr + 0x449e40d;
+NSString *disasm = [TitanoxHook decodeOpcodeAtAddress:target];
+// will also auto log
+NSLog(@"decoded opcode: %@", disasm);
+```
+
+**VMT (Virtual) Hook usage and helpers (NEW)**
+```c++
+class QAZ {
+public:
+    virtual int do_shit(int v) {
+        printf("%d\n", v);
+        return v;
+    }
+    virtual ~QAZ() = default;
+};
+
+int mt_do_shit(QAZ* s, int v) {
+    printf("Hooked value -> %d\n", v);
+    return 69420;
+}
+
+void messaround() {
+    QAZ* obj = new QAZ();
+
+    void* hook = [TitanoxHook vmthookCreateWithNewFunction:(void*)&my_do_shit index:0];
+    if (!hook) {
+        //Titanox will auto log what went wrong and where.
+        delete obj;
+        return;
+    }
+
+    [TitanoxHook vmthookSwap:hook instance:(void*)obj]; // THIS actually does the hook. swaps vtable
+
+    int res1 = obj->do_shit(5); // try calling with any value, will return 69420.
+     
+    // reset to original vtable 
+    [TitanoxHook vmthookReset:hook instance:(void*)obj];
+
+    int res2 = obj->do_shit(5);
+    NSLog(@"This should be 5 -> %d", res2);
+
+    [TitanoxHook vmthookDestroy:hook];
+
+    void* inv = [TitanoxHook vmtinvokerCreateWithInstance:(void*)obj index:0];
+    if (!inv) {
+        // again it will auto log.
+        delete obj;
+        return;
+    }
+    
+    // Just cast invoker to func ptr with same signature e.g: int(*)(CPPClass*, int)
+
+    typedef int (*fn_t)(QAZ*, int);
+    fn_t func = *(fn_t*)&inv;
+
+    int res3 = func(obj, 10);
+    NSLog(@"direct invoker call: %d", res3);
+    
+    // get rid of the caller
+    [TitanoxHook vmtinvokerDestroy:inv];
+
+    delete obj;
+}
+// You can call orig and hook as many funcs as you want safely.
+// However, they must be virtual. If they aren't, use brk hooks.
+// I'd reccommend using brk hooks as a last resort though.
+// prioritise this
+// Example: Let's say you can't get a class instance for some reason
+// You can use brk hooks to hook it, get instance, unhook, and use that to hook whatever target function you have (virtual)
+
+```
+
 
 **BRK Hook (Aarch64/arm64) FOR C/C++ FUNCTIONS BY ADDRESS**
 ```objc
