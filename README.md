@@ -9,33 +9,40 @@
 *experimental*: This framework also uses ``breakpoint hooks``. Inspired by [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
+
 **beta function**: brk hooking.
-- **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
--> Undetected*
 
-- **Opcode decoder**: Give it an address, it will use capstone and show dissasembly of that address and instruction.
+- **Breakpoint hooks**: Apply up to maximum 6 hooks via breakpoints at runtime.  
+  -> Undetected*
 
-- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
+- **Opcode decoder**: Give it an address, it will use Capstone and show disassembly of that address and instruction.
 
-- **Virtual Function hooking**: You can hook any pure C++ class virtual function with this. A wrapper for @Aethereux 's MemX.
--> Unlimited
--> Must be virtual
--> By address
+- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook).  
+  FUNCTIONS MUST BE EXPORTED!!!
+
+- **Virtual Function hooking**: You can hook any pure C++ class virtual function with this. A wrapper for @Aethereux's MemX.  
+  -> Unlimited  
+  -> Must be virtual  
+  -> By address
 
 - **Method Swizzling**: Replace methods in Objective-C classes.
 
-- **Memory Patching**: Modify memory contents safely.
--> Read
--> Write
--> Patch (Insipred from Dobby's CodePatch, made to work on stock IOS)
+- **Memory Patching**: Modify memory contents safely.  
+  -> Read  
+  -> Write  
+  -> Patch (Inspired from Dobby's CodePatch, made to work on stock iOS)
 
-- **Bool-Hooking**: Toggle bool values in memory, to the opposite of their original state. bool symbol must be exposed.
+- **Bool-Hooking**: Toggle bool values in memory, to the opposite of their original state. Bool symbol must be exposed.
 
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
 
-- **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
+- **Base Address & VM Address Slide Get**: Get `BaseAddress` i.e. header of the target library and the `vm addr` slide.
 
-**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS ``TITANOX_LOGS.TXT``. NO NEED TO USE ``NSLog`` or ``Console`` app to view logs! You can take logging from ``utils/utils.mm``.**
+---
+
+**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS `TITANOX_LOGS.TXT`.**  
+NO NEED TO USE `NSLog` or `Console` app to view logs!  
+You can take logging from `utils/utils.mm`.
 
 ## APIs:~
 
