@@ -1,3 +1,6 @@
+/*
+ // https://github.com/Aethereux/MemX
+*/
 #pragma once
 
 #include <cstdint>
