@@ -181,12 +181,14 @@ void unhook_exit() {
 Hook a function by symbol using fishhook (Will hook in main task process):
 
 ```objc
-[TitanoxHook hookStaticFunction:"_funcsym" withReplacement:newFunction outOldFunction:&oldFunction];
+[TitanoxHook hookStaticFunction:"_funcsym" withReplacement:newFunction inLibrary:"libName" outOldFunction:&oldFunction];
 ```  
 
-**Hook a function in a specific library**:(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
-Can be the main executable or a loaded library in the application.**
+**Hook a function in a specific library**: (Will load in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
+This will hook all usages of the symbol.
+**Can be the main executable or a loaded library in the application.**
 
+-> Same thing here:
 ```objc
 [TitanoxHook hookFunctionByName:"_Zn5Get6Ten" inLibrary:"ShooterGame" withReplacement:newFunction outOldFunction:&oldFunction];
 ```
