@@ -427,6 +427,16 @@ Don't expect everything to be working well. For bug reports, you must test multi
 **Titanox feels...empty now. By this, I mean the features. I would love recommendations (feasible, ofcourse) for Titanox and community PRs!**
 
 ---
+# **Ideas?**
+-> you can hook ``vm`` & ``mach_vm`` functions so the processes which check these won't be able to anymore.
+-> hook dlsym and see usages
+-> use breakpoint hooks for functions in games which aren't virtual but you really need to hook them
+-> hook the NSUrl library functions to spoof responses for apps
+-> bypass pop-ups and disable ads
+-> patch anti-cheats at runtime
+-> dissasemble addresses and then check that dissasembly in IDA or ghidra for whatever you're looking for. (makes it easier if what you're using is outdated.)
+-> r/w proccess memory without being caught (if you properly hook/patch detections)
+___
 
 # Credits:
 **Ragekill3377** -> Owner + Main Developer
