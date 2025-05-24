@@ -1,6 +1,6 @@
 # **Titanox: iOS**
 
-**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `MemX` for memory related tasks. This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
+**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `MemX` for memory related tasks. On top of that, it has a built-in ``capstone-engine`` for runtime dissasembly! This library supports function hooking, address dissasembly, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
 [Titanox Discord Server](https://discord.gg/VRJDUhBF)
 
@@ -10,7 +10,7 @@
 
 ## Features
 
-**beta function**: brk hooking.
+**beta function**: Address runtime disasm
 
 - **Breakpoint hooks**: Apply up to maximum 6 hooks via breakpoints at runtime.  
   -> Undetected*
