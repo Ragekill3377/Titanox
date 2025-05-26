@@ -26,6 +26,8 @@ namespace MemX {
         return 0;
     }
 
+    // not sure if this is the same for every app or binary...
+    // may have to update this to get the range dynamically?
     inline bool IsValidPointer(uintptr_t address) {
         return address >= 0x100000000 && address < 0x3000000000;
     }
