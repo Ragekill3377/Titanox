@@ -26,10 +26,80 @@ namespace MemX {
         return 0;
     }
 
-    // not sure if this is the same for every app or binary...
-    // may have to update this to get the range dynamically?
-    inline bool IsValidPointer(uintptr_t address) {
-        return address >= 0x100000000 && address < 0x3000000000;
+struct AddrRange {
+        uintptr_t start;
+        uintptr_t end;
+    };
+
+    // https://developer.apple.com/documentation/kernel/mach_header/
+    // Full addr range for each lib loaded
+    inline const std::vector<AddrRange>& GetFullAddr() {
+        static std::vector<AddrRange> ranges;
+        // we just need to get ranges once
+        // calling over n over is redundant
+        if (!ranges.empty()) {
+            return ranges;
+        }
+
+        for (uint32_t i = 0; i < _dyld_image_count(); ++i) {
+            const mach_header* header = _dyld_get_image_header(i);
+            intptr_t slide = _dyld_get_image_vmaddr_slide(i);
+            if (!header) continue;
+
+            const uint8_t* ptr = reinterpret_cast<const uint8_t*>(header);
+            const load_command* cmd = nullptr;
+            uint32_t ncmds = 0;
+
+            switch (header->magic) {
+                // ncmds -> https://developer.apple.com/documentation/kernel/mach_header/1525650-ncmds
+                //64-bit
+                case MH_MAGIC_64: {
+                    const auto* hdr = reinterpret_cast<const mach_header_64*>(ptr);
+                    cmd = reinterpret_cast<const load_command*>(hdr + 1);
+                    ncmds = hdr->ncmds;
+                    break;
+                }
+                //32-bit
+                case MH_MAGIC: {
+                    const auto* hdr = reinterpret_cast<const mach_header*>(ptr);
+                    cmd = reinterpret_cast<const load_command*>(hdr + 1);
+                    ncmds = hdr->ncmds;
+                    break;
+                }
+                default:
+                    continue;
+            }
+
+            for (uint32_t j = 0; j < ncmds; ++j) {
+                switch (cmd->cmd) {
+                    // https://developer.apple.com/documentation/kernel/segment_command_64
+                    // goes through the load commands
+                    case LC_SEGMENT_64: {
+                        const auto* seg = reinterpret_cast<const segment_command_64*>(cmd);
+                        uintptr_t start = static_cast<uintptr_t>(seg->vmaddr + slide); // ASLR start
+                        uintptr_t end = start + static_cast<uintptr_t>(seg->vmsize); // vmsize is end
+                        ranges.push_back({start, end});
+                        break;
+                    }
+                    default:
+                        break;
+                }
+                cmd = reinterpret_cast<const load_command*>(
+                    reinterpret_cast<const uint8_t*>(cmd) + cmd->cmdsize);
+            }
+        }
+        return ranges;
+    }
+    
+    // better 'IsValidPointer'
+    inline bool IsValidPointer(uintptr_t addr) {
+        const auto& ranges = GetFullAddr();
+        for (const auto& r : ranges) {
+            if (addr >= r.start && addr < r.end) {
+                return true;
+            }
+        }
+        return false;
     }
 
     inline bool _read(uintptr_t addr, void* buffer, size_t len) {
