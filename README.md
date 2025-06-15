@@ -1,6 +1,6 @@
-# **Titanox: iOS**
+# **Titanox**
 
-**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `MemX` for memory related tasks. On top of that, it has a built-in ``capstone-engine`` for runtime dissasembly! This library supports function hooking, address dissasembly, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
+**`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `MemX` for memory related tasks. This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
 [Titanox Discord Server](https://discord.gg/VRJDUhBF)
 
@@ -9,42 +9,38 @@
 *experimental*: This framework also uses ``breakpoint hooks``. Inspired by [The Ellekit Team](https://github.com/tealbathingsuit/ellekit).
 
 ## Features
+**beta function**: brk hooking.
+- **Breakpoint hooks**: Apply upto maximum 6 hooks via breakpoints at runtime.
+-> Undetected*
 
-**beta function**: Address runtime disasm
+- **Static Inline Hook & Patch**: 
+-> Patch unlimited addresses
+-> Hook unlimited addresses
+-> Be able to call orig in hooks
+-> Unlimited
+-> Drawback: need to manually replace binary (From documents directory)
 
-- **Breakpoint hooks**: Apply up to maximum 6 hooks via breakpoints at runtime.  
-  -> Undetected*
+- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook). FUNCTIONS MUST BE EXPORTED!!!
 
-- **Opcode decoder**: Give it an address, it will use Capstone and show disassembly of that address and instruction.
-
-- **Function Hooking (by symbol)**: Hook functions and rebind symbols (fishhook).  
-  FUNCTIONS MUST BE EXPORTED!!!
-
-- **Virtual Function hooking**: You can hook any pure C++ class virtual function with this. A wrapper for @Aethereux's MemX.  
-  -> Unlimited  
-  -> Must be virtual  
-  -> By address
+- **Virtual Function hooking**: You can hook any pure C++ class virtual function with this. A wrapper for @Aethereux 's MemX.
+-> Unlimited
+-> Must be virtual
+-> By address
 
 - **Method Swizzling**: Replace methods in Objective-C classes.
 
-- **Memory Patching**: Modify memory contents safely.  
-  -> Read  
-  -> Write  
-  -> Patch (Inspired from Dobby's CodePatch, made to work on stock iOS)
+- **Memory Patching**: Modify memory contents safely.
+-> Read
+-> Write
+-> Patch (Insipred from Dobby's CodePatch, made to work on stock IOS)
 
-- **Bool-Hooking**: Toggle bool values in memory, to the opposite of their original state. Bool symbol must be exposed.
+- **Bool-Hooking**: Toggle bool values in memory, to the opposite of their original state. bool symbol must be exposed.
 
 - **Is Hooked**: Check if a function is already hooked. *This is done automatically.*
 
-- **Base Address & VM Address Slide Get**: Get `BaseAddress` i.e. header of the target library and the `vm addr` slide.
+- **Base Address & VM Address Slide Get**: Get ``BaseAddress`` i.e header of the target library and the ``vm addr`` slide.
 
----
-
-**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS `TITANOX_LOGS.TXT`.**  
-NO NEED TO USE `NSLog` or `Console` app to view logs!  
-You can take logging from `utils/utils.mm`.
-
----
+**LOGS ARE SAVED TO DOCUMENT'S DIRECTORY AS ``TITANOX_LOGS.TXT``. NO NEED TO USE ``NSLog`` or ``Console`` app to view logs! You can take logging from ``utils/utils.mm``.**
 
 ## APIs:~
 
@@ -52,18 +48,52 @@ You can take logging from `utils/utils.mm`.
 
 - **MemX**: A memory management library by @Aethereux. (Modified) [MemX-Jailed](https://github.com/Aethereux/MemX-Jailed.git)
 
-- **Capstone** : A light & portable dissasembler by @capstone-engine. [Capstone](https://github.com/capstone-engine/capstone)
-
----
-
+### Documentation:~
 # Usage:~
 
-**OpCode Decoder by address (Dissasembler at runtime) (NEW)**:
+**Static Inline Hook (NEW)**:
+
+**A bit complex to use** ->
+
+* Patch
+
+* Get patched binary
+
+* Replaced original binary with patched one
+
+* re-inject titanox + your tweak/library in the target, but this time the target must be the patched one
+
+**Required!**
 ```objc
-void *target = baseAddr + 0x449e40d;
-NSString *disasm = [TitanoxHook decodeOpcodeAtAddress:target];
-// will also auto log
-NSLog(@"decoded opcode: %@", disasm);
+StaticInlineHook *hooker = [[StaticInlineHook alloc] initWithMachOName:@"hello.dylib"]; // whatever is name of target binary
+```
+
+**Patching address (Need to activate later)**
+```objc
+NSString *originalBytes = [hooker applyPatchAtVaddr:0x100003f20 // vm addr stuff
+patchBytes:@"00008052C0035FD6"]; // mov & ret asm
+```
+
+**Hook Function**
+```objc
+void *runthishook = [hooker hookFunctionAtVaddr:0x100004000 withReplacement:(void *)&orig_target];
+// you can call orig in the hook func
+```
+
+**Activate patch**
+```objc
+BOOL qw = [hooker activatePatchAtVaddr:0x100003f20 patchBytes:@"00008052C0035FD6"]; // make sure its same as addr patch init
+if (qw) {
+    // worked
+}
+```
+
+**Deactivate patch**
+```objc
+BOOL wq = [hooker deactivatePatchAtVaddr:0x100003f20 patchBytes:@"00008052C0035FD6"]; // must be same as init patch
+if (wq) {
+    // worked
+}
 ```
 
 **VMT (Virtual) Hook usage and helpers (NEW)**
@@ -181,14 +211,12 @@ void unhook_exit() {
 Hook a function by symbol using fishhook (Will hook in main task process):
 
 ```objc
-[TitanoxHook hookStaticFunction:"_funcsym" withReplacement:newFunction inLibrary:"libName" outOldFunction:&oldFunction];
+[TitanoxHook hookStaticFunction:"_funcsym" withReplacement:newFunction outOldFunction:&oldFunction];
 ```  
 
-**Hook a function in a specific library**: (Will load in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
-This will hook all usages of the symbol.
-**Can be the main executable or a loaded library in the application.**
+**Hook a function in a specific library**:(Will hook in target library/Binary specified in 'inLibrary'.) Full name is required. i.e extension if any e.g .dylib. It auto loads in the target if not loaded in!
+Can be the main executable or a loaded library in the application.**
 
--> Same thing here:
 ```objc
 [TitanoxHook hookFunctionByName:"_Zn5Get6Ten" inLibrary:"ShooterGame" withReplacement:newFunction outOldFunction:&oldFunction];
 ```
@@ -335,7 +363,7 @@ Get the VM address slide of a dynamic library (add .dylib ext) / executable:
 intptr_t vmAddrSlide = [TitanoxHook getVmAddrSlideOfLibrary:"libName"];
 ```
 
----
+
 
 ## Compiling From Source:~
 
@@ -383,8 +411,6 @@ cd Titanox
 You will get a .deb file in your output directory i.e ``packages``. Also, it will move the *.dylib* to your $THEOS/lib directory as **libtitanox.dylib** (Unless you changed TWEAK_NAME in ``Makefile``).
 You can use this to link against your own code, or even you could merge Titanox's sources with your own.
 
----
-
 ### Using release builds:~
 * Navigate to releases
 * Download the latest ``libtitanox.dylib``.
@@ -398,12 +424,8 @@ $(TWEAK_NAME)_LDFLAGS = -L$(THEOS)/lib -ltitanox -Wl,-rpath,@executable_path # T
 
 This will link *libtitanox.dylib*. From there, you can inject your own library or binary which uses Titanox, & Titanox itself.
 
----
-
 ### License:
 You are free to use this code and modify it however you want. I am not responsible for any illegal or malicious acts caused by the use of this code.
-
----
 
 # **DISCLAIMER**
 **Titanox is in no way a JAILBREAK or a TWEAK INJECTION LIBRARY.**  
@@ -425,18 +447,6 @@ Titanox is meant for **developers** to create tools like that for users.
 Titanox is **still being tested and developed.** Expect bugs. Report them.
 Don't expect everything to be working well. For bug reports, you must test multiple cases and see if the issue is a bug with Titanox or something you're doing wrong.
 **Titanox feels...empty now. By this, I mean the features. I would love recommendations (feasible, ofcourse) for Titanox and community PRs!**
-
----
-# **Ideas?**
--> you can hook ``vm`` & ``mach_vm`` functions so the processes which check these won't be able to anymore.
--> hook dlsym and see usages
--> use breakpoint hooks for functions in games which aren't virtual but you really need to hook them
--> hook the NSUrl library functions to spoof responses for apps
--> bypass pop-ups and disable ads
--> patch anti-cheats at runtime
--> dissasemble addresses and then check that dissasembly in IDA or ghidra for whatever you're looking for. (makes it easier if what you're using is outdated.)
--> r/w proccess memory without being caught (if you properly hook/patch detections)
-___
 
 # Credits:
 **Ragekill3377** -> Owner + Main Developer
