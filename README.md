@@ -463,4 +463,4 @@ Don't expect everything to be working well. For bug reports, you must test multi
 
 ## **Star History**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Ragekill3377/Titanox&type=Date)](https://www.star-history.com/#Ragekill3377/Titanox&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Ragekill3377/Titanox&type=Timeline)](https://www.star-history.com/#Ragekill3377/Titanox&Timeline)
