@@ -24,7 +24,7 @@ USDT-TRC20 address: ``TGtQav9ockH1gnb4oqpJLHZJgjv65aEsQj``
 -> Undetected*
 
 - **Static Inline Hook & Patch**: 
--> Patch unlimited addresses
+-> Patch unlimited addresses **UNDER MAINTENANCE**
 -> Hook unlimited addresses
 -> Be able to call orig in hooks
 -> Unlimited
