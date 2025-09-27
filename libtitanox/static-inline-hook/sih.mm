@@ -251,6 +251,9 @@ bool MachOHooker::add_hook_sections() {
     [macho_data_ appendBytes:data_page.get() length:DATA_PAGE_SIZE];
 
     [macho_data_ appendData:linkedit_data];
+
+    parse_macho_info();
+
     return save_patched_binary();
 }
 
