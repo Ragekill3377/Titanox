@@ -457,6 +457,7 @@ Titanox is meant for **developers** to create tools like that for users.
 Titanox is **still being tested and developed.** Expect bugs. Report them.
 Don't expect everything to be working well. For bug reports, you must test multiple cases and see if the issue is a bug with Titanox or something you're doing wrong.
 
+
 **Titanox feels...empty now. By this, I mean the features. I would love recommendations (feasible, ofcourse) for Titanox and community PRs!**
 
 # Credits:
