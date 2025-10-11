@@ -448,16 +448,40 @@ uint64_t MachOHooker::calculate_patch_hash(uint64_t vaddr, const std::string& pa
     return std::hash<std::string>{}(patch) ^ vaddr;
 }
 
-bool MachOHooker::apply_inline_patch(HookBlock* block, uint64_t func_rva, void* func_data, uint64_t target_rva, void* target_data, const std::string& patch_bytes) {
+
+/*
+
+31    26 25                    0
+| 000101 |       imm26          |
+
+
+Opcode 0b000101 → 0x14000000
+
+imm26 = signed 26-bit offset, in words (so multiply by 4 to get bytes)
+
+so, B target  =>  0x14000000 | ((target - pc) >> 2)
+
+*/
+bool MachOHooker::apply_inline_patch(HookBlock* block, uint64_t func_rva, void* func_data, uint64_t target_rva, void* target_data, const std::string& patch_bytes)
+{
     if (!block || !func_data || !target_data) {
         LOG(@"Invalid patch parameters");
         return false;
     }
 
-    uint64_t code_size = 4; // Minimum instruction size for ARM64 branch
-    uint8_t branch_code[] = {0x00, 0x00, 0x00, 0x14}; // B instruction
-    memcpy(target_data, branch_code, sizeof(branch_code));
+    // well duh B instr is 4 bytes
+    const uint64_t code_size = 4;
+    int64_t diff = static_cast<int64_t>(target_rva) - static_cast<int64_t>(func_rva + 8);
+    int64_t imm26 = diff >> 2;
 
+    // out of bounds?
+    if (imm26 < -(1 << 25) || imm26 >= (1 << 25)) {
+        LOG(@"26-bit B out of range for this target.");
+        return false;
+    }
+
+    uint32_t branch = 0x14000000 | (imm26 & 0x03FFFFFF); // align
+    memcpy(target_data, &branch, sizeof(branch)); // main shit
     block->hook_vaddr = func_rva;
     block->code_vaddr = target_rva;
     block->code_size = code_size;
@@ -476,6 +500,7 @@ bool MachOHooker::apply_inline_patch(HookBlock* block, uint64_t func_rva, void* 
 
     return true;
 }
+
 
 std::optional<std::string> MachOHooker::apply_patch(uint64_t vaddr, const std::string& patch_bytes) {
     if (vaddr % 4 != 0) {
