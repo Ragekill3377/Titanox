@@ -2,17 +2,28 @@
 
 # **Donations**
 USDT-TRC20 address: ``TGtQav9ockH1gnb4oqpJLHZJgjv65aEsQj``
+
 BNB-BSC address: ``0x6a42D5375e77FF896E5fDD5B494Df9f9cAA08D78``
+
 SOLANA/SOL: ``3HQw2KHZDFL3nEpFxvN5YZGxCqjBsLK5jyhHLZoJsq2q``
+
 USDC/BSC: ``0x6a42D5375e77FF896E5fDD5B494Df9f9cAA08D78``
+
 LITECOIN/LTC: ``LZr52LM5EaWv7RF8GJY635woqwpxZK3zMJ``
+
 TRON/TRX: ``TRRNssMpSvDkGYq7qPq22Ff6vgFT4dBNwu``
 
+-
 
 - Do not send NFTs to this/these address/addresses.
+
+- 
 -> SEND SOLANA NFTs to:
+  
 ``3HQw2KHZDFL3nEpFxvN5YZGxCqjBsLK5jyhHLZoJsq2q``
+
 -> FOR ETHEREUM/ETH NFTs:
+
 ``0x6a42D5375e77FF896E5fDD5B494Df9f9cAA08D78``
 
 
