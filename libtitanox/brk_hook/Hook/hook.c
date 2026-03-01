@@ -11,6 +11,21 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/sysctl.h>
+#if defined(__arm64e__)
+#include <ptrauth.h>
+#endif
+
+#if defined(__arm64e__)
+static inline uintptr_t strip_ptr(uintptr_t p) {
+    return (uintptr_t)ptrauth_strip((void *)p, ptrauth_key_function_pointer);
+}
+static inline void *sign_ptr(void *p) {
+    return ptrauth_sign_unauthenticated(p, ptrauth_key_function_pointer, 0);
+}
+#else
+static inline uintptr_t strip_ptr(uintptr_t p) { return p; }
+static inline void *sign_ptr(void *p) { return p; }
+#endif
 
 kern_return_t catch_mach_exception_raise(
     mach_port_t exception_port,
@@ -66,10 +81,11 @@ kern_return_t catch_mach_exception_raise_state(
     arm_thread_state64_t *new = (arm_thread_state64_t *)new_state;
 
     for (int i = 0; i < active_hooks; ++i) {
-        if (hooks[i].old == arm_thread_state64_get_pc(*old)) { // this checks if
+        uintptr_t pc = strip_ptr(arm_thread_state64_get_pc(*old));
+        if (hooks[i].old == pc) { // this checks if
             *new = *old;                                        // brk is from hook
             *new_stateCnt = old_stateCnt;                       // or not
-            arm_thread_state64_set_pc_fptr(*new, hooks[i].new);
+            arm_thread_state64_set_pc_fptr(*new, sign_ptr((void *)hooks[i].new));
             return KERN_SUCCESS;
         }
     }
@@ -130,9 +146,9 @@ bool hook(void *old[], void *new[], int count) {
     
     arm_debug_state64_t state = {};
     for (int i = 0; i < count; i++) {
-        state.__bvr[i] = (uintptr_t)old[i]; // set
+        state.__bvr[i] = strip_ptr((uintptr_t)old[i]); // set
         state.__bcr[i] = 0x1e5; // enable
-        hooks[active_hooks] = (struct hook){(uintptr_t)old[i], (uintptr_t)new[i]};
+        hooks[active_hooks] = (struct hook){strip_ptr((uintptr_t)old[i]), strip_ptr((uintptr_t)new[i])};
         active_hooks++;
     }
     
@@ -165,7 +181,7 @@ bool unhook(void *old[], int count) {
     // because this makes the global active hooks 0.
     // so, it should be decrementing for every successful call. :) 
     for (int j = 0; j < active_hooks; j++) {
-        if (hooks[j].old == (uintptr_t)old[i]) {
+        if (hooks[j].old == strip_ptr((uintptr_t)old[i])) {
             hooks[j] = hooks[active_hooks - 1]; // we move the last hook into a current slot
             active_hooks--;                     
             break;
