@@ -82,6 +82,8 @@ StaticInlineHook *hooker = [[StaticInlineHook alloc] initWithMachOName:@"hello.d
 ```objc
 NSString *originalBytes = [hooker applyPatchAtVaddr:0x100003f20 // vm addr stuff
 patchBytes:@"00008052C0035FD6"]; // mov & ret asm
+//if hooking, keep patch bytes empty. i.e: ""
+//only need to do this when MAKING the hooks/patches on binary, not for executing.
 ```
 
 **Hook Function**
@@ -456,8 +458,6 @@ Titanox is meant for **developers** to create tools like that for users.
 
 Titanox is **still being tested and developed.** Expect bugs. Report them.
 Don't expect everything to be working well. For bug reports, you must test multiple cases and see if the issue is a bug with Titanox or something you're doing wrong.
-
-
 **Titanox feels...empty now. By this, I mean the features. I would love recommendations (feasible, ofcourse) for Titanox and community PRs!**
 
 # Credits:
