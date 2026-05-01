@@ -2,30 +2,7 @@
 
 # **Donations**
 USDT-TRC20 address: ``TGtQav9ockH1gnb4oqpJLHZJgjv65aEsQj``
-
-BNB-BSC address: ``0x6a42D5375e77FF896E5fDD5B494Df9f9cAA08D78``
-
-SOLANA/SOL: ``3HQw2KHZDFL3nEpFxvN5YZGxCqjBsLK5jyhHLZoJsq2q``
-
-USDC/BSC: ``0x6a42D5375e77FF896E5fDD5B494Df9f9cAA08D78``
-
-LITECOIN/LTC: ``LZr52LM5EaWv7RF8GJY635woqwpxZK3zMJ``
-
-TRON/TRX: ``TRRNssMpSvDkGYq7qPq22Ff6vgFT4dBNwu``
-
--
-
-- Do not send NFTs to this/these address/addresses.
-
-- 
--> SEND SOLANA NFTs to:
-  
-``3HQw2KHZDFL3nEpFxvN5YZGxCqjBsLK5jyhHLZoJsq2q``
-
--> FOR ETHEREUM/ETH NFTs:
-
-``0x6a42D5375e77FF896E5fDD5B494Df9f9cAA08D78``
-
+- Do not send NFTs to this address.
 
   PayPal:
   @HKTRC
@@ -35,7 +12,7 @@ TRON/TRX: ``TRRNssMpSvDkGYq7qPq22Ff6vgFT4dBNwu``
 
 **`Titanox`** is a hooking framework for iOS. It utilizes `fishhook` for symbol rebinding and `MemX` for memory related tasks. This library supports function hooking, method swizzling, memory patching etc. It does not have any external dependencies and can be used on **non-jailbroken/non-rooted** IOS devices with full functionailty!!!
 
-[Titanox Discord Server](https://discord.gg/ynP34H9w)
+[Titanox Discord Server](https://discord.gg/VRJDUhBF)
 
 **Join for support!**
 
@@ -105,6 +82,8 @@ StaticInlineHook *hooker = [[StaticInlineHook alloc] initWithMachOName:@"hello.d
 ```objc
 NSString *originalBytes = [hooker applyPatchAtVaddr:0x100003f20 // vm addr stuff
 patchBytes:@"00008052C0035FD6"]; // mov & ret asm
+//if hooking, keep patch bytes empty. i.e: ""
+//only need to do this when MAKING the hooks/patches on binary, not for executing.
 ```
 
 **Hook Function**
