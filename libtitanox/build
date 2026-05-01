@@ -1,0 +1,31 @@
+#!/bin/bash
+
+##############################################################
+# I think it looks cool :).                                  #
+##############################################################
+
+COLOR() {
+  local text="$1"
+  local colors=(196 202 208 214 220 226 190 154 118 82 46 47 48 49 51 45 39 33 27)
+  local color_count=${#colors[@]}
+  local output=""
+
+  for ((i = 0; i < ${#text}; i++)); do
+    local char="${text:i:1}"
+    if [[ "$char" == " " ]]; then
+      output+=" "
+    else
+      local color="${colors[i % color_count]}"
+      output+="\e[38;5;${color}m${char}\e[0m"
+    fi
+  done
+
+  echo -e "$output"
+}
+
+COLOR "Compiling Titanox..."
+sleep 2
+
+clear && rm -rf packages && rm -rf .theos && make clean && COLOR "Build started." && make package -j8 && rm -rf .theos
+sleep 2
+COLOR "Compiling Complete. Release is in ./packages."
